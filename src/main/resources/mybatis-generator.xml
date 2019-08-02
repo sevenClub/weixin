@@ -1,0 +1,62 @@
+<!--
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+    <context id="DB2Tables"    targetRuntime="MyBatis3">
+        <commentGenerator>
+&lt;!&ndash;            <property name="suppressDate" value="false"/>&ndash;&gt;
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+  &lt;!&ndash;      <commentGenerator type="com.nlf.uops.util.NlfCommentGenerator">
+            <property name="suppressDate" value="false"/>
+            <property name="suppressAllComments" value="false"/>
+            <property name="addRemarkComments" value="true" />
+            <property name="dateFormat" value="yyyy-MM-dd HH:mm:ss" />
+        </commentGenerator>&ndash;&gt;
+
+        &lt;!&ndash;数据库链接地址账号密码&ndash;&gt;
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://127.0.0.1:3306/test" userId="root" password="123456">
+        </jdbcConnection>
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="true"/>
+        </javaTypeResolver>
+        &lt;!&ndash;生成Model类存放位置&ndash;&gt;
+        <javaModelGenerator targetPackage="xin.yangmj.entity2" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        &lt;!&ndash;生成映射文件存放位置&ndash;&gt;
+        <sqlMapGenerator targetPackage="mybatis.mapper" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+        &lt;!&ndash;生成Dao类存放位置&ndash;&gt;
+        &lt;!&ndash; 客户端代码，生成易于使用的针对Model对象和XML配置文件 的代码
+                type="ANNOTATEDMAPPER",生成Java Model 和基于注解的Mapper对象  
+                type="MIXEDMAPPER",生成基于注解的Java Model 和相应的Mapper对象  
+                type="XMLMAPPER",生成SQLMap XML文件和独立的Mapper接口  
+        &ndash;&gt;
+        <javaClientGenerator type="XMLMAPPER" targetPackage="xin.yangmj.mapper" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+        &lt;!&ndash;生成对应表及类名&ndash;&gt;
+        &lt;!&ndash;<table tableName="recon_info" domainObjectName="com.nlf.uopss.recon" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>&ndash;&gt;
+        <table tableName="order_%"
+               enableInsert="true"
+               enableDeleteByPrimaryKey="true"
+               enableUpdateByPrimaryKey="true"
+               enableSelectByPrimaryKey="true"
+               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
+        <table tableName="project_%"
+               enableInsert="true"
+               enableDeleteByPrimaryKey="true"
+               enableUpdateByPrimaryKey="true"
+               enableSelectByPrimaryKey="true"
+               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
+
+
+    </context>
+</generatorConfiguration>  -->

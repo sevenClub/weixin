@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xin.yangmj.mapper.OrderDetailsMapper" >
+  <resultMap id="BaseResultMap" type="xin.yangmj.entity.OrderDetails" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="wechat_openid" property="wechatOpenid" jdbcType="VARCHAR" />
+    <result column="is_active" property="isActive" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="project_fee" property="projectFee" jdbcType="DECIMAL" />
+    <result column="order_id" property="orderId" jdbcType="INTEGER" />
+    <result column="contact_dir" property="contactDir" jdbcType="VARCHAR" />
+    <result column="is_captain" property="isCaptain" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, wechat_openid, is_active, create_time, update_time, project_fee, order_id, contact_dir, 
+    is_captain
+  </sql>
+  <select id="queryOrderDetailsAll" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from order_details
+    <where>
+      <if test="id != null and id != ''"  >
+        AND id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="orderId != null and orderId != ''"  >
+        AND order_id = #{orderId}
+      </if>
+    </where>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from order_details
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertOrderDetails" parameterType="xin.yangmj.entity.OrderDetails" >
+    insert into order_details (id, wechat_openid, is_active, 
+      create_time, update_time, project_fee, 
+      order_id, contact_dir, is_captain
+      )
+    values (#{id,jdbcType=INTEGER}, #{wechatOpenid,jdbcType=VARCHAR}, #{isActive,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=VARCHAR}, #{projectFee,jdbcType=DECIMAL}, 
+      #{orderId,jdbcType=INTEGER}, #{contactDir,jdbcType=VARCHAR}, #{isCaptain,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="xin.yangmj.entity.OrderDetails" >
+    insert into order_details
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="wechatOpenid != null" >
+        wechat_openid,
+      </if>
+      <if test="isActive != null" >
+        is_active,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="projectFee != null" >
+        project_fee,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="contactDir != null" >
+        contact_dir,
+      </if>
+      <if test="isCaptain != null" >
+        is_captain,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="wechatOpenid != null" >
+        #{wechatOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="isActive != null" >
+        #{isActive,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="projectFee != null" >
+        #{projectFee,jdbcType=DECIMAL},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="contactDir != null" >
+        #{contactDir,jdbcType=VARCHAR},
+      </if>
+      <if test="isCaptain != null" >
+        #{isCaptain,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="xin.yangmj.entity.OrderDetails" >
+    update order_details
+    <set >
+      <if test="wechatOpenid != null" >
+        wechat_openid = #{wechatOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="isActive != null" >
+        is_active = #{isActive,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="projectFee != null" >
+        project_fee = #{projectFee,jdbcType=DECIMAL},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="contactDir != null" >
+        contact_dir = #{contactDir,jdbcType=VARCHAR},
+      </if>
+      <if test="isCaptain != null" >
+        is_captain = #{isCaptain,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="xin.yangmj.entity.OrderDetails" >
+    update order_details
+    set wechat_openid = #{wechatOpenid,jdbcType=VARCHAR},
+      is_active = #{isActive,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=VARCHAR},
+      project_fee = #{projectFee,jdbcType=DECIMAL},
+      order_id = #{orderId,jdbcType=INTEGER},
+      contact_dir = #{contactDir,jdbcType=VARCHAR},
+      is_captain = #{isCaptain,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

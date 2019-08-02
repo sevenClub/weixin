@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xin.yangmj.mapper.ProjectItemMapper" >
+  <resultMap id="BaseResultMap" type="xin.yangmj.entity.ProjectItem" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="project_id" property="projectId" jdbcType="VARCHAR" />
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="total_Num" property="totalNum" jdbcType="INTEGER" />
+    <result column="project_cost" property="projectCost" jdbcType="DECIMAL" />
+    <result column="discount" property="discount" jdbcType="DECIMAL" />
+    <result column="end_price" property="endPrice" jdbcType="DECIMAL" />
+    <result column="game_location" property="gameLocation" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="open_time" property="openTime" jdbcType="VARCHAR" />
+    <result column="sport_active_tm" property="sportActiveTm" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, project_id, project_name, total_Num, project_cost, discount, end_price, game_location, 
+    create_time, update_time, open_time, sport_active_tm
+  </sql>
+  <select id="queryProjectItemList" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from project_item
+    <where>
+      <if test="id != null and id != ''"  >
+        AND id = #{id,jdbcType=INTEGER}
+      </if>
+    </where>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from project_item
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertProjectItem" parameterType="xin.yangmj.entity.ProjectItem">
+    insert into project_item (id, project_id, project_name, 
+      total_Num, project_cost, discount, 
+      end_price, game_location, create_time, 
+      update_time, open_time, sport_active_tm
+      )
+    values (#{id,jdbcType=INTEGER}, #{projectId,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR}, 
+      #{totalNum,jdbcType=INTEGER}, #{projectCost,jdbcType=DECIMAL}, #{discount,jdbcType=DECIMAL}, 
+      #{endPrice,jdbcType=DECIMAL}, #{gameLocation,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=VARCHAR}, #{openTime,jdbcType=VARCHAR}, #{sportActiveTm,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="xin.yangmj.entity.ProjectItem" >
+    insert into project_item
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="projectName != null" >
+        project_name,
+      </if>
+      <if test="totalNum != null" >
+        total_Num,
+      </if>
+      <if test="projectCost != null" >
+        project_cost,
+      </if>
+      <if test="discount != null" >
+        discount,
+      </if>
+      <if test="endPrice != null" >
+        end_price,
+      </if>
+      <if test="gameLocation != null" >
+        game_location,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="openTime != null" >
+        open_time,
+      </if>
+      <if test="sportActiveTm != null" >
+        sport_active_tm,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null" >
+        #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="totalNum != null" >
+        #{totalNum,jdbcType=INTEGER},
+      </if>
+      <if test="projectCost != null" >
+        #{projectCost,jdbcType=DECIMAL},
+      </if>
+      <if test="discount != null" >
+        #{discount,jdbcType=DECIMAL},
+      </if>
+      <if test="endPrice != null" >
+        #{endPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="gameLocation != null" >
+        #{gameLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="openTime != null" >
+        #{openTime,jdbcType=VARCHAR},
+      </if>
+      <if test="sportActiveTm != null" >
+        #{sportActiveTm,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="xin.yangmj.entity.ProjectItem" >
+    update project_item
+    <set >
+      <if test="projectId != null" >
+        project_id = #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null" >
+        project_name = #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="totalNum != null" >
+        total_Num = #{totalNum,jdbcType=INTEGER},
+      </if>
+      <if test="projectCost != null" >
+        project_cost = #{projectCost,jdbcType=DECIMAL},
+      </if>
+      <if test="discount != null" >
+        discount = #{discount,jdbcType=DECIMAL},
+      </if>
+      <if test="endPrice != null" >
+        end_price = #{endPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="gameLocation != null" >
+        game_location = #{gameLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="openTime != null" >
+        open_time = #{openTime,jdbcType=VARCHAR},
+      </if>
+      <if test="sportActiveTm != null" >
+        sport_active_tm = #{sportActiveTm,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateProjectItem" parameterType="xin.yangmj.entity.ProjectItem" >
+    update project_item
+    set project_id = #{projectId,jdbcType=VARCHAR},
+      project_name = #{projectName,jdbcType=VARCHAR},
+      total_Num = #{totalNum,jdbcType=INTEGER},
+      project_cost = #{projectCost,jdbcType=DECIMAL},
+      discount = #{discount,jdbcType=DECIMAL},
+      end_price = #{endPrice,jdbcType=DECIMAL},
+      game_location = #{gameLocation,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=VARCHAR},
+      open_time = #{openTime,jdbcType=VARCHAR},
+      sport_active_tm = #{sportActiveTm,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

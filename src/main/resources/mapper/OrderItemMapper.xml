@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xin.yangmj.mapper.OrderItemMapper" >
+  <resultMap id="BaseResultMap" type="xin.yangmj.entity.OrderItem" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="project_id" property="projectId" jdbcType="VARCHAR" />
+    <result column="curr_Num" property="currNum" jdbcType="INTEGER" />
+    <result column="total_Num" property="totalNum" jdbcType="INTEGER" />
+    <result column="is_full" property="isFull" jdbcType="VARCHAR" />
+    <result column="game_status" property="gameStatus" jdbcType="VARCHAR" />
+    <result column="end_price" property="endPrice" jdbcType="DECIMAL" />
+    <result column="game_location" property="gameLocation" jdbcType="VARCHAR" />
+    <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="acture_start_tm" property="actureStartTm" jdbcType="VARCHAR" />
+    <result column="end_time" property="endTime" jdbcType="VARCHAR" />
+    <result column="sport_title" property="sportTitle" jdbcType="VARCHAR" />
+    <result column="project_cost" property="projectCost" jdbcType="DECIMAL" />
+    <result column="fee_tags" property="feeTags" jdbcType="VARCHAR" />
+    <result column="activity_hour" property="activityHour" jdbcType="DECIMAL" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="contact_dir" property="contactDir" jdbcType="VARCHAR" />
+    <result column="start_wechat_openid" property="startWechatOpenid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, project_id, curr_Num, total_Num, is_full, game_status, end_price, game_location, 
+    order_status, create_time, update_time, acture_start_tm, end_time, sport_title, project_cost, 
+    fee_tags, activity_hour, description, contact_dir, start_wechat_openid
+  </sql>
+  <select id="queryOrderItemAll" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from order_item
+    <where>
+      <if test="id != null and id != ''"  >
+        AND id = #{id,jdbcType=INTEGER}
+      </if>
+    </where>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from order_item
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertOrderItem" parameterType="xin.yangmj.entity.OrderItem" useGeneratedKeys="true" keyProperty="id" >
+
+    insert into order_item (id, project_id, curr_Num, 
+      total_Num, is_full, game_status, 
+      end_price, game_location, order_status, 
+      create_time, update_time, acture_start_tm, 
+      end_time, sport_title, project_cost, 
+      fee_tags, activity_hour, description, 
+      contact_dir, start_wechat_openid)
+    values (#{id,jdbcType=INTEGER}, #{projectId,jdbcType=VARCHAR}, #{currNum,jdbcType=INTEGER}, 
+      #{totalNum,jdbcType=INTEGER}, #{isFull,jdbcType=VARCHAR}, #{gameStatus,jdbcType=VARCHAR}, 
+      #{endPrice,jdbcType=DECIMAL}, #{gameLocation,jdbcType=VARCHAR}, #{orderStatus,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=VARCHAR}, #{actureStartTm,jdbcType=VARCHAR}, 
+      #{endTime,jdbcType=VARCHAR}, #{sportTitle,jdbcType=VARCHAR}, #{projectCost,jdbcType=DECIMAL}, 
+      #{feeTags,jdbcType=VARCHAR}, #{activityHour,jdbcType=DECIMAL}, #{description,jdbcType=VARCHAR}, 
+      #{contactDir,jdbcType=VARCHAR}, #{startWechatOpenid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="xin.yangmj.entity.OrderItem" >
+    insert into order_item
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="currNum != null" >
+        curr_Num,
+      </if>
+      <if test="totalNum != null" >
+        total_Num,
+      </if>
+      <if test="isFull != null" >
+        is_full,
+      </if>
+      <if test="gameStatus != null" >
+        game_status,
+      </if>
+      <if test="endPrice != null" >
+        end_price,
+      </if>
+      <if test="gameLocation != null" >
+        game_location,
+      </if>
+      <if test="orderStatus != null" >
+        order_status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="actureStartTm != null" >
+        acture_start_tm,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="sportTitle != null" >
+        sport_title,
+      </if>
+      <if test="projectCost != null" >
+        project_cost,
+      </if>
+      <if test="feeTags != null" >
+        fee_tags,
+      </if>
+      <if test="activityHour != null" >
+        activity_hour,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="contactDir != null" >
+        contact_dir,
+      </if>
+      <if test="startWechatOpenid != null" >
+        start_wechat_openid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="currNum != null" >
+        #{currNum,jdbcType=INTEGER},
+      </if>
+      <if test="totalNum != null" >
+        #{totalNum,jdbcType=INTEGER},
+      </if>
+      <if test="isFull != null" >
+        #{isFull,jdbcType=VARCHAR},
+      </if>
+      <if test="gameStatus != null" >
+        #{gameStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="endPrice != null" >
+        #{endPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="gameLocation != null" >
+        #{gameLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="orderStatus != null" >
+        #{orderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="actureStartTm != null" >
+        #{actureStartTm,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="sportTitle != null" >
+        #{sportTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="projectCost != null" >
+        #{projectCost,jdbcType=DECIMAL},
+      </if>
+      <if test="feeTags != null" >
+        #{feeTags,jdbcType=VARCHAR},
+      </if>
+      <if test="activityHour != null" >
+        #{activityHour,jdbcType=DECIMAL},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="contactDir != null" >
+        #{contactDir,jdbcType=VARCHAR},
+      </if>
+      <if test="startWechatOpenid != null" >
+        #{startWechatOpenid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="xin.yangmj.entity.OrderItem" >
+    update order_item
+    <set >
+      <if test="projectId != null" >
+        project_id = #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="currNum != null" >
+        curr_Num = #{currNum,jdbcType=INTEGER},
+      </if>
+      <if test="totalNum != null" >
+        total_Num = #{totalNum,jdbcType=INTEGER},
+      </if>
+      <if test="isFull != null" >
+        is_full = #{isFull,jdbcType=VARCHAR},
+      </if>
+      <if test="gameStatus != null" >
+        game_status = #{gameStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="endPrice != null" >
+        end_price = #{endPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="gameLocation != null" >
+        game_location = #{gameLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="orderStatus != null" >
+        order_status = #{orderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="actureStartTm != null" >
+        acture_start_tm = #{actureStartTm,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="sportTitle != null" >
+        sport_title = #{sportTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="projectCost != null" >
+        project_cost = #{projectCost,jdbcType=DECIMAL},
+      </if>
+      <if test="feeTags != null" >
+        fee_tags = #{feeTags,jdbcType=VARCHAR},
+      </if>
+      <if test="activityHour != null" >
+        activity_hour = #{activityHour,jdbcType=DECIMAL},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="contactDir != null" >
+        contact_dir = #{contactDir,jdbcType=VARCHAR},
+      </if>
+      <if test="startWechatOpenid != null" >
+        start_wechat_openid = #{startWechatOpenid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="xin.yangmj.entity.OrderItem" >
+    update order_item
+    set project_id = #{projectId,jdbcType=VARCHAR},
+      curr_Num = #{currNum,jdbcType=INTEGER},
+      total_Num = #{totalNum,jdbcType=INTEGER},
+      is_full = #{isFull,jdbcType=VARCHAR},
+      game_status = #{gameStatus,jdbcType=VARCHAR},
+      end_price = #{endPrice,jdbcType=DECIMAL},
+      game_location = #{gameLocation,jdbcType=VARCHAR},
+      order_status = #{orderStatus,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=VARCHAR},
+      acture_start_tm = #{actureStartTm,jdbcType=VARCHAR},
+      end_time = #{endTime,jdbcType=VARCHAR},
+      sport_title = #{sportTitle,jdbcType=VARCHAR},
+      project_cost = #{projectCost,jdbcType=DECIMAL},
+      fee_tags = #{feeTags,jdbcType=VARCHAR},
+      activity_hour = #{activityHour,jdbcType=DECIMAL},
+      description = #{description,jdbcType=VARCHAR},
+      contact_dir = #{contactDir,jdbcType=VARCHAR},
+      start_wechat_openid = #{startWechatOpenid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
