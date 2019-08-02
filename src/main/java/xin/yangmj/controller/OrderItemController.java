@@ -1,5 +1,7 @@
 package xin.yangmj.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -13,7 +15,10 @@ import xin.yangmj.entity.OrderItem;
 import xin.yangmj.service.OrderDetailsService;
 import xin.yangmj.service.OrderItemService;
 
+import java.util.List;
+
 @RestController
+@Slf4j
 public class OrderItemController {
 
     @Autowired
@@ -28,6 +33,21 @@ public class OrderItemController {
         ResponseResult resp = ResponseResult.makeSuccResponse(null, projectItemPageInfo);
         return resp;
     }
+
+    /**
+     * 查看我发起运动项目和我参加的运动项目
+     * 运动的最新状态
+     */
+    @PostMapping("/queryLeaderOrFollower")
+    public ResponseResult queryLeaderOrFollower( @RequestBody JSONObject jsonObject){
+        String isCaptain=jsonObject.get("isCaptain").toString();
+        String orderStatus=jsonObject.get("orderStatus").toString();
+        String wechatOpenid=jsonObject.get("wechatOpenid").toString();
+        List<OrderItem> orderItems = orderItemService.queryLeaderOrFollower(isCaptain, orderStatus,wechatOpenid);
+        ResponseResult resp = ResponseResult.makeSuccResponse(null, orderItems);
+        return resp;
+    }
+
 
     /**
      * 创建订单的信息
@@ -51,12 +71,13 @@ public class OrderItemController {
             //0是 1否 发起人
             orderDetails.setIsCaptain("0");
 //            int i = 1/0;
-            int details = orderDetailsService.insertOrderDetails(orderDetails);
+            String details = orderDetailsService.insertOrderDetails(orderDetails);
             resp = ResponseResult.makeSuccResponse(null, item);
         } catch (Exception e) {
             e.printStackTrace();
+            log.info(e.toString());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            resp = ResponseResult.makeFailResponse(null, "失败");
+            resp = ResponseResult.makeFailResponse(null, "服务器繁忙");
         }
         return resp;
     }

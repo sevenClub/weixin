@@ -41,7 +41,7 @@ public class OrderDetailsController {
      * @return
      */
 
-    @PostMapping("/insertDetails")
+    @PostMapping("/takePartInSportDetails")
     @Transactional
     public ResponseResult insertDetails(@RequestBody OrderItem orderItem) {
 
@@ -51,12 +51,18 @@ public class OrderDetailsController {
         // 0 在线  1 退出拼单
         orderDetails.setIsActive("0");
         orderDetails.setProjectFee(orderItem.getProjectCost());
-        //0是 1否 发起人
+        //0是 1否 发起人 第一个发起人为是，后面通过本端口都是1
         orderDetails.setIsCaptain("1");
         ResponseResult resp = null;
         try {
-            int details = orderDetailsService.insertOrderDetails(orderDetails);
-            resp = ResponseResult.makeSuccResponse(null, details);
+            String details = orderDetailsService.insertOrderDetails(orderDetails);
+//            00 为插入数据库成功
+            if("00".equals(details)){
+                resp = ResponseResult.makeSuccResponse(null, details);
+            }else {
+                resp = ResponseResult.makeFailResponse(null, "名额已满，看看其他活动吧~");
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

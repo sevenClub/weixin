@@ -249,7 +249,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="xin.yangmj.entity.OrderItem" >
+  <update id="updateOrderItemByKey" parameterType="xin.yangmj.entity.OrderItem" >
     update order_item
     set project_id = #{projectId,jdbcType=VARCHAR},
       curr_Num = #{currNum,jdbcType=INTEGER},

@@ -1,6 +1,8 @@
 package xin.yangmj.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import xin.yangmj.entity.OrderItem;
 
 import java.util.List;
@@ -16,5 +18,17 @@ public interface OrderItemMapper {
 
     int updateByPrimaryKeySelective(OrderItem record);
 
-    int updateByPrimaryKey(OrderItem record);
+    /**
+     * 根据主键更新订单的详情信息
+     * @param record
+     * @return
+     */
+    int updateOrderItemByKey(OrderItem record);
+
+//    @Select("select *,count(*) as count from message WHERE toid = #{userId} GROUP BY formid ORDER BY created_date desc limit #{offset}, #{limit}")
+//    List<Message> selectConversationList(@Param("userId") String userId, @Param("offset") int offset, @Param("limit") int limit);
+
+    @Select("select item.id,item.sport_title,item.curr_Num,item.total_Num,item.acture_start_tm,item.game_location from order_item item ,order_details detail where item.id = detail.order_id and detail.is_captain =#{isCaptain}" +
+            " and item.order_status =#{orderStatus} and detail.wechat_openid =#{wechatOpenid} and detail.is_active ='0'")
+    List<OrderItem> queryLeaderOrFollower(@Param("isCaptain") String isCaptain, @Param("orderStatus") String orderStatus, @Param("wechatOpenid") String wechatOpenid);
 }
