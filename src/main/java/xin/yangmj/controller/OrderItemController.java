@@ -61,5 +61,22 @@ public class OrderItemController {
         return resp;
     }
 
+    /**
+     * 手动关闭订单，可以开始游戏，即使没有满员的情况也可以开始游戏
+     * 如果是aa的项目，将费用平摊出去
+     */
 
+    public void closeOrderStartGame(@RequestBody OrderItem orderItem) {
+
+//        game_status 为0 ，可以开始游戏
+        orderItem.setGameStatus("0");
+//      1  未满员
+        orderItem.setIsFull("1");
+        int itemResult = orderItemService.updateOrderItemByKey(orderItem);
+
+        //如果是aa项目需要将订单金额平分
+        if (1 == itemResult && "AA".equals(orderItem.getFeeTags())) {
+            
+        }
+    }
 }
