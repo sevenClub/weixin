@@ -60,7 +60,7 @@ public class OrderDetailsController {
             if("00".equals(details)){
                 resp = ResponseResult.makeSuccResponse(null, details);
             }else {
-                resp = ResponseResult.makeFailResponse(null, "名额已满，看看其他活动吧~");
+                resp = ResponseResult.makeFailResponse("名额已满，看看其他活动吧~",null );
             }
 
         } catch (Exception e) {
