@@ -14,6 +14,7 @@ import xin.yangmj.entity.OrderDetails;
 import xin.yangmj.entity.OrderItem;
 import xin.yangmj.service.OrderDetailsService;
 import xin.yangmj.service.OrderItemService;
+import xin.yangmj.util.DateUtil;
 
 import java.util.List;
 
@@ -61,6 +62,15 @@ public class OrderItemController {
         OrderDetails orderDetails = new OrderDetails();
         ResponseResult resp = null;
         try {
+//            发起订单的人初始为1
+            orderItem.setCurrNum(1);
+//            0开始游戏，1还在招募人员，主要是针对手动关闭订单开始游戏
+            orderItem.setGameStatus("1");
+//            订单状态，0 组队中 1 待参加 2 已结束
+//            TODO 暂时没考虑订单人数未1的人数
+            orderItem.setOrderStatus("0");
+//            0满员 1 未满员
+            orderItem.setIsFull("1");
             int item = orderItemService.insertOrderItem(orderItem);
             //订单创建的时候，需要将发起人的信息插入到order_details订单明细表
             orderDetails.setOrderId(orderItem.getId());
@@ -83,4 +93,56 @@ public class OrderItemController {
     }
 
 
+    /**
+     * 订单人数未达标，人为关闭订单，意义是即使人员没有满也可以开始游戏
+     * @param orderItem
+     * @return
+     */
+    @PostMapping("/tmpStartGame")
+    public ResponseResult tmpStartGame(@RequestBody OrderItem orderItem) {
+//        安全性需要自己从表或者然后更新
+        MyPageInfo<OrderItem> queryOrderItemAll = orderItemService.queryOrderItemAll(orderItem);
+        OrderItem orderItemBean = queryOrderItemAll.getList().get(0);
+//        0满员 1 未满员
+        orderItemBean.setIsFull("1");
+//        0 组队中 1 待参加 2 已结束
+        orderItemBean.setOrderStatus("1");
+//        按钮显示是否可以玩，不管人数满员否，0开始游戏，1还在招募人员
+        orderItemBean.setGameStatus("0");
+        orderItem.setUpdateTime(DateUtil.formatDateTime());
+        ResponseResult resp = null;
+        try {
+            int itemResult = orderItemService.updateOrderItemByKey(orderItemBean);
+            resp = ResponseResult.makeSuccResponse(null, itemResult);
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp = ResponseResult.makeFailResponse("网络错误", "");
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        }
+        return resp;
+    }
+
+    /**
+     * 发起人取消订单
+     * @param orderItem
+     * @return
+     */
+    @PostMapping("/cancleOrder")
+    public ResponseResult cancleOrder(@RequestBody OrderItem orderItem) {
+
+        //        0 组队中 1 待参加 2 已结束 3 取消
+        orderItem.setOrderStatus("3");
+        orderItem.setUpdateTime(DateUtil.formatDateTime());
+
+        ResponseResult resp = null;
+        try {
+            int item = orderItemService.updateOrderItemByKeySelective(orderItem);
+            resp = ResponseResult.makeSuccResponse(null, item);
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp = ResponseResult.makeFailResponse("网络错误", "");
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        }
+        return resp;
+    }
 }

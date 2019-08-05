@@ -59,8 +59,11 @@ public class OrderDetailsController {
 //            00 为插入数据库成功
             if("00".equals(details)){
                 resp = ResponseResult.makeSuccResponse(null, details);
-            }else {
+            }else if("01".equals(details)){
                 resp = ResponseResult.makeFailResponse("名额已满，看看其他活动吧~",null );
+            }else {
+//                参数不完整，如参数传递错误
+                resp = ResponseResult.makeFailResponse(details,null );
             }
 
         } catch (Exception e) {

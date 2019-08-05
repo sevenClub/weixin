@@ -72,4 +72,21 @@ public class OrderItemServiceImpl implements OrderItemService {
         }
         return orderItemList;
     }
+
+    @Override
+    public int updateOrderItemByKey(OrderItem orderItem) {
+        return orderItemMapper.updateOrderItemByKey(orderItem);
+    }
+
+    @Override
+    public int cancleOrderByKey(Integer id) {
+
+
+        return orderItemMapper.cancleOrderByKey(id);
+    }
+
+    @Override
+    public int updateOrderItemByKeySelective(OrderItem orderItem) {
+        return orderItemMapper.updateOrderItemByKeySelective(orderItem);
+    }
 }

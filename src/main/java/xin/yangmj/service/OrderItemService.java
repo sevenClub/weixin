@@ -19,4 +19,10 @@ public interface OrderItemService {
      * @return
      */
     List<OrderItem> queryLeaderOrFollower(String isCaptain,String orderStatus,String wechatOpenid);
+
+    int updateOrderItemByKey(OrderItem record);
+
+    int cancleOrderByKey(Integer isCaptain);
+
+    int updateOrderItemByKeySelective(OrderItem record);
 }

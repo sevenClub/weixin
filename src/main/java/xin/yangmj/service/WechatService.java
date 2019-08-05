@@ -52,7 +52,7 @@ public class WechatService {
 
         Long expires = response.getExpiresIn();
         String thirdSession = create3rdSession(wxOpenId, wxSessionKey, expires);
-        return new WechatAuthenticationResponse(thirdSession,wxOpenId);
+        return new WechatAuthenticationResponse(thirdSession,wxOpenId,code);
     }
 
     public WechatAuthCodeResponse getWxSession(String code) {

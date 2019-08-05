@@ -13,13 +13,17 @@ public class WechatAuthenticationResponse implements Serializable {
     @JsonProperty("wx_OpenId")
     private final String wxOpenId;
 
+    @JsonProperty("code")
+    private final String code;
+
     public String getWxOpenId() {
         return wxOpenId;
     }
 
-    public WechatAuthenticationResponse(String accessToken, String wxOpenId) {
+    public WechatAuthenticationResponse(String accessToken, String wxOpenId,String code) {
         this.accessToken = accessToken;
         this.wxOpenId = wxOpenId;
+        this.code = code;
     }
 
     public String getAccess_token() {

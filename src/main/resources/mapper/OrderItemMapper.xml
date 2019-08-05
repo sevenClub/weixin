@@ -186,7 +186,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="xin.yangmj.entity.OrderItem" >
+  <update id="updateOrderItemByKeySelective" parameterType="xin.yangmj.entity.OrderItem" >
     update order_item
     <set >
       <if test="projectId != null" >

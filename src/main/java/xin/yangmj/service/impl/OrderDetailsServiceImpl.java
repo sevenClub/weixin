@@ -72,7 +72,7 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
                 return result = "01";
             }
         }else {
-            return "01";
+            return "参数不完整";
         }
 
     }

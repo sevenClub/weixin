@@ -3,6 +3,7 @@ package xin.yangmj.mapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import xin.yangmj.entity.OrderItem;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public interface OrderItemMapper {
 
     List<OrderItem> queryOrderItemAll(OrderItem orderItem);
 
-    int updateByPrimaryKeySelective(OrderItem record);
+    int updateOrderItemByKeySelective(OrderItem record);
 
     /**
      * 根据主键更新订单的详情信息
@@ -31,4 +32,11 @@ public interface OrderItemMapper {
     @Select("select item.id,item.sport_title,item.curr_Num,item.total_Num,item.acture_start_tm,item.game_location from order_item item ,order_details detail where item.id = detail.order_id and detail.is_captain =#{isCaptain}" +
             " and item.order_status =#{orderStatus} and detail.wechat_openid =#{wechatOpenid} and detail.is_active ='0'")
     List<OrderItem> queryLeaderOrFollower(@Param("isCaptain") String isCaptain, @Param("orderStatus") String orderStatus, @Param("wechatOpenid") String wechatOpenid);
+
+    /**
+     * 订单的取消
+     */
+
+    @Update("update order_item item set order_status ='3' where id = #{id}")
+    int cancleOrderByKey(@Param("id") Integer isCaptain);
 }
