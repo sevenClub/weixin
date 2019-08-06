@@ -15,5 +15,7 @@ public interface ProjectItemService {
      */
     int insertProjectItem(ProjectItem projectItem);
 
-    int updateProjectItem(ProjectItem record);
+    int updateByPrimaryKeySelective(ProjectItem record);
+
+    ProjectItem queryProjectByKey(ProjectItem record);
 }

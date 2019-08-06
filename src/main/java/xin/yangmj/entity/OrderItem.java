@@ -2,6 +2,7 @@ package xin.yangmj.entity;
 
 import xin.yangmj.entity.base.BaseEntity;
 
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -18,6 +19,7 @@ public class OrderItem extends BaseEntity {
 
     private String gameStatus;
 
+    //作为查询条件的结果金额的上限
     private BigDecimal endPrice;
 
     private String gameLocation;
@@ -45,6 +47,54 @@ public class OrderItem extends BaseEntity {
     private String contactDir;
 
     private String startWechatOpenid;
+
+    //新增字段，不映射到数据库
+    @Transient
+    private String numType;
+    @Transient
+    private String costRMB;
+
+    @Transient
+    private String queryDate;
+
+    public String getQueryDate() {
+        return queryDate;
+    }
+
+    public void setQueryDate(String queryDate) {
+        this.queryDate = queryDate;
+    }
+
+    public String getNumType() {
+        return numType;
+    }
+
+    public void setNumType(String numType) {
+        this.numType = numType;
+    }
+
+    public String getCostRMB() {
+        return costRMB;
+    }
+
+    public void setCostRMB(String costRMB) {
+        this.costRMB = costRMB;
+    }
+
+
+    /**
+     * 查询的总人数上限
+     */
+    @Transient
+    private Integer totalNumUp;
+
+    public Integer getTotalNumUp() {
+        return totalNumUp;
+    }
+
+    public void setTotalNumUp(Integer totalNumUp) {
+        this.totalNumUp = totalNumUp;
+    }
 
     public Integer getId() {
         return id;

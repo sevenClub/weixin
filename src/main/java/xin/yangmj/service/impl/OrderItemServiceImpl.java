@@ -89,4 +89,14 @@ public class OrderItemServiceImpl implements OrderItemService {
     public int updateOrderItemByKeySelective(OrderItem orderItem) {
         return orderItemMapper.updateOrderItemByKeySelective(orderItem);
     }
+
+    @Override
+    public List<OrderItem> timerCloseOrder() {
+        return orderItemMapper.timerCloseOrder();
+    }
+
+    @Override
+    public int updateOrderItemBatch(HashMap hashMap) {
+        return orderItemMapper.updateOrderItemBatch(hashMap);
+    }
 }

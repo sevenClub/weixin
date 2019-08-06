@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +18,8 @@ import xin.yangmj.service.OrderDetailsService;
 import xin.yangmj.service.OrderItemService;
 import xin.yangmj.util.DateUtil;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -28,8 +32,77 @@ public class OrderItemController {
     @Autowired
     private OrderDetailsService orderDetailsService;
 
+    /**
+     * 有条件查询订单
+     * 查询所有的订单
+     * @param orderItem
+     * @return
+     */
     @PostMapping("/findAllOrders")
     public ResponseResult queryOrderItemAll(@RequestBody OrderItem orderItem){
+        /*
+            01 5人以下
+            02 5-8人
+            03 8-10人
+            04 10人以上
+         */
+
+        /*if ("01".equals(num)) {
+            orderItem.setTotalNum(1);
+            orderItem.setTotalNumUp(5);
+        }*/
+        //根据人数筛选
+        String numType = orderItem.getNumType();
+        String costRMB = orderItem.getCostRMB();
+        String queryDate = orderItem.getQueryDate();
+        if(!StringUtils.isEmpty(numType)){
+            Integer num = Integer.valueOf(numType);
+            switch (num) {
+                case 1:
+                    orderItem.setTotalNum(1);
+                    orderItem.setTotalNumUp(5);
+                    break;
+                case 2:
+                    orderItem.setTotalNum(5);
+                    orderItem.setTotalNumUp(8);
+                    break;
+                case 3:
+                    orderItem.setTotalNum(8);
+                    orderItem.setTotalNumUp(10);
+                    break;
+                default:
+                    orderItem.setTotalNum(10);
+                    break;
+//                orderItem.setTotalNumUp(5);
+            }
+        }
+        /*
+            根据订单总金额筛选
+            01 免费
+            02 人均50以内
+            03 人均50-100
+            04 人均100以上
+         */
+        if(!StringUtils.isEmpty(costRMB)){
+            if ("01".equals(costRMB)) {
+//                OO 免费 AA
+                orderItem.setFeeTags("AA");
+            }else if ("02".equals(costRMB)) {
+                orderItem.setProjectCost(new BigDecimal(0));
+                orderItem.setEndPrice(new BigDecimal(50));
+            }else if ("03".equals(costRMB)) {
+                orderItem.setProjectCost(new BigDecimal(50));
+                orderItem.setEndPrice(new BigDecimal(100));
+            }else {
+                orderItem.setProjectCost(new BigDecimal(100));
+            }
+        }
+        //根据日期筛选
+        if (!StringUtils.isEmpty(queryDate)) {
+//            yyyy/mm/dd to yyyy-mm-dd
+            String yyyyToYYYY = DateUtil.yyyyToYYYY(queryDate);
+            orderItem.setActureStartTm(yyyyToYYYY);
+        }
         MyPageInfo<OrderItem> projectItemPageInfo = orderItemService.queryOrderItemAll(orderItem);
         ResponseResult resp = ResponseResult.makeSuccResponse(null, projectItemPageInfo);
         return resp;
@@ -66,11 +139,17 @@ public class OrderItemController {
             orderItem.setCurrNum(1);
 //            0开始游戏，1还在招募人员，主要是针对手动关闭订单开始游戏
             orderItem.setGameStatus("1");
-//            订单状态，0 组队中 1 待参加 2 已结束
-//            TODO 暂时没考虑订单人数未1的人数
-            orderItem.setOrderStatus("0");
-//            0满员 1 未满员
-            orderItem.setIsFull("1");
+            Integer totalNum = orderItem.getTotalNum();
+            if(1 == totalNum){
+//                订单只有一个人的情况
+                orderItem.setOrderStatus("1");
+                orderItem.setIsFull("0");
+            }else {
+                //            订单状态，0 组队中 1 待参加 2 已结束 3取消
+                orderItem.setOrderStatus("0");
+                //            0满员 1 未满员
+                orderItem.setIsFull("1");
+            }
             int item = orderItemService.insertOrderItem(orderItem);
             //订单创建的时候，需要将发起人的信息插入到order_details订单明细表
             orderDetails.setOrderId(orderItem.getId());
@@ -145,4 +224,29 @@ public class OrderItemController {
         }
         return resp;
     }
+
+    /**
+     * 定时任务启动，关闭时间到期还没有满员的订单
+     * @return
+     */
+    @PostMapping("/timerCloseOrder")
+    public void timerCloseOrder() {
+
+        List<OrderItem> orderItemList = orderItemService.timerCloseOrder();
+        HashMap<Object, Object> hashMap = new HashMap<>();
+        if (!CollectionUtils.isEmpty(orderItemList)) {
+            /*for (int i = 0; i < orderItemList.size(); i++) {
+                OrderItem queryOrderItem = orderItemList.get(i);
+//                0 组队中 1 待参加 2 已结束 3取消
+                queryOrderItem.setOrderStatus("3");
+            }*/
+            hashMap.put("ids",orderItemList);
+            //批量更新数据的信息
+            int i = orderItemService.updateOrderItemBatch(hashMap);
+            if (i > 0) {
+                log.info("批量更新:{}",i);
+            }
+        }
+    }
+
 }

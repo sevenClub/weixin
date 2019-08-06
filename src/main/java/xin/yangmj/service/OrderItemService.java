@@ -3,6 +3,7 @@ package xin.yangmj.service;
 import xin.yangmj.common.MyPageInfo;
 import xin.yangmj.entity.OrderItem;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface OrderItemService {
@@ -25,4 +26,8 @@ public interface OrderItemService {
     int cancleOrderByKey(Integer isCaptain);
 
     int updateOrderItemByKeySelective(OrderItem record);
+
+    List<OrderItem> timerCloseOrder();
+
+    int updateOrderItemBatch(HashMap hashMap);
 }

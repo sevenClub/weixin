@@ -551,5 +551,18 @@ public class DateUtil {
     public static String formatDateTime4() {
     	return (formatDate(now(), "MMddHHmmss"));
     }
+
+	public static String yyyyToYYYY(String date) {
+
+		SimpleDateFormat sdfx = new SimpleDateFormat("yyyy/MM/dd");
+		SimpleDateFormat sdfh = new SimpleDateFormat("yyyy-MM-dd");
+		String nowTime2 = "";
+		try {
+			nowTime2 = sdfh.format(sdfx.parse(date));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return nowTime2;
+	}
     
 }

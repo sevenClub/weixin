@@ -28,4 +28,7 @@ public interface ProjectItemMapper {
     int updateByPrimaryKeySelective(ProjectItem record);
 
     int updateProjectItem(ProjectItem record);
+    ProjectItem queryProjectByKey(ProjectItem record);
+
+
 }

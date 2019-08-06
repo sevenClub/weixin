@@ -59,8 +59,15 @@ public class ProjectController {
     public ResponseResult updateProjectItem(@RequestBody ProjectItem projectItem) {
 
         ResponseResult resp = null;
+        ProjectItem queryProject = projectItemService.queryProjectByKey(projectItem);
+        if (null == queryProject) {
+            return resp = ResponseResult.makeFailResponse("该项目已经不存在，请确认", "");
+        }
+        queryProject.setProjectName(projectItem.getProjectName());
+        queryProject.setTotalNum(projectItem.getTotalNum());
+        queryProject.setProjectCost(projectItem.getProjectCost());
         try {
-            int item = projectItemService.updateProjectItem(projectItem);
+            int item = projectItemService.updateByPrimaryKeySelective(queryProject);
             resp = ResponseResult.makeSuccResponse(null, item);
         } catch (Exception e) {
             e.printStackTrace();

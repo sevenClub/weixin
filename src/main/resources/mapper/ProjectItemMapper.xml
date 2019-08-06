@@ -29,6 +29,17 @@
       </if>
     </where>
   </select>
+
+  <select id="queryProjectByKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from project_item
+    <where>
+      <if test="id != null and id != ''"  >
+        AND id = #{id,jdbcType=INTEGER}
+      </if>
+    </where>
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from project_item
     where id = #{id,jdbcType=INTEGER}
@@ -148,7 +159,7 @@
       <if test="gameLocation != null" >
         game_location = #{gameLocation,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null" >
+      <if test="createTime != null and createTime != ''" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >

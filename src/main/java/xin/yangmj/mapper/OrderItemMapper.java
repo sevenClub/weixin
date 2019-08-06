@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import xin.yangmj.entity.OrderItem;
 
+import java.util.HashMap;
 import java.util.List;
 @Mapper
 public interface OrderItemMapper {
@@ -39,4 +40,13 @@ public interface OrderItemMapper {
 
     @Update("update order_item item set order_status ='3' where id = #{id}")
     int cancleOrderByKey(@Param("id") Integer isCaptain);
+
+    /**
+     * 定时任务启动，关闭时间到期还没有满员的订单
+     * @return
+     */
+    @Select("select * from order_item item where item.is_full ='1' and item.order_status ='0' and UNIX_TIMESTAMP(item.end_time)<UNIX_TIMESTAMP(now())")
+    List<OrderItem> timerCloseOrder();
+
+    int updateOrderItemBatch(HashMap hashMap);
 }
