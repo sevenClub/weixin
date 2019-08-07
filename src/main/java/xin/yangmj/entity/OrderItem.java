@@ -48,6 +48,10 @@ public class OrderItem extends BaseEntity {
 
     private String startWechatOpenid;
 
+    private String sportImgUrl;
+
+
+
     //新增字段，不映射到数据库
     @Transient
     private String numType;
@@ -59,6 +63,14 @@ public class OrderItem extends BaseEntity {
 
     public String getQueryDate() {
         return queryDate;
+    }
+
+    public String getSportImgUrl() {
+        return sportImgUrl;
+    }
+
+    public void setSportImgUrl(String sportImgUrl) {
+        this.sportImgUrl = sportImgUrl;
     }
 
     public void setQueryDate(String queryDate) {

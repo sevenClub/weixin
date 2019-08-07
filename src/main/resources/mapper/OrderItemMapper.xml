@@ -77,14 +77,14 @@
       create_time, update_time, acture_start_tm, 
       end_time, sport_title, project_cost, 
       fee_tags, activity_hour, description, 
-      contact_dir, start_wechat_openid)
+      contact_dir, start_wechat_openid, sport_img_url)
     values (#{id,jdbcType=INTEGER}, #{projectId,jdbcType=VARCHAR}, #{currNum,jdbcType=INTEGER}, 
       #{totalNum,jdbcType=INTEGER}, #{isFull,jdbcType=VARCHAR}, #{gameStatus,jdbcType=VARCHAR}, 
       #{endPrice,jdbcType=DECIMAL}, #{gameLocation,jdbcType=VARCHAR}, #{orderStatus,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=VARCHAR}, #{actureStartTm,jdbcType=VARCHAR}, 
       #{endTime,jdbcType=VARCHAR}, #{sportTitle,jdbcType=VARCHAR}, #{projectCost,jdbcType=DECIMAL}, 
       #{feeTags,jdbcType=VARCHAR}, #{activityHour,jdbcType=DECIMAL}, #{description,jdbcType=VARCHAR}, 
-      #{contactDir,jdbcType=VARCHAR}, #{startWechatOpenid,jdbcType=VARCHAR})
+      #{contactDir,jdbcType=VARCHAR}, #{startWechatOpenid,jdbcType=VARCHAR},#{sportImgUrl,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="xin.yangmj.entity.OrderItem" >
     insert into order_item

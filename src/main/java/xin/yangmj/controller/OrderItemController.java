@@ -3,6 +3,7 @@ package xin.yangmj.controller;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.CollectionUtils;
@@ -32,14 +33,19 @@ public class OrderItemController {
     @Autowired
     private OrderDetailsService orderDetailsService;
 
+    @Value("${login.url}")
+    private  String loginUrl;
+
+
     /**
      * 有条件查询订单
      * 查询所有的订单
+     *
      * @param orderItem
      * @return
      */
     @PostMapping("/findAllOrders")
-    public ResponseResult queryOrderItemAll(@RequestBody OrderItem orderItem){
+    public ResponseResult queryOrderItemAll(@RequestBody OrderItem orderItem) {
         /*
             01 5人以下
             02 5-8人
@@ -55,7 +61,7 @@ public class OrderItemController {
         String numType = orderItem.getNumType();
         String costRMB = orderItem.getCostRMB();
         String queryDate = orderItem.getQueryDate();
-        if(!StringUtils.isEmpty(numType)){
+        if (!StringUtils.isEmpty(numType)) {
             Integer num = Integer.valueOf(numType);
             switch (num) {
                 case 1:
@@ -83,17 +89,17 @@ public class OrderItemController {
             03 人均50-100
             04 人均100以上
          */
-        if(!StringUtils.isEmpty(costRMB)){
+        if (!StringUtils.isEmpty(costRMB)) {
             if ("01".equals(costRMB)) {
 //                OO 免费 AA
                 orderItem.setFeeTags("AA");
-            }else if ("02".equals(costRMB)) {
+            } else if ("02".equals(costRMB)) {
                 orderItem.setProjectCost(new BigDecimal(0));
                 orderItem.setEndPrice(new BigDecimal(50));
-            }else if ("03".equals(costRMB)) {
+            } else if ("03".equals(costRMB)) {
                 orderItem.setProjectCost(new BigDecimal(50));
                 orderItem.setEndPrice(new BigDecimal(100));
-            }else {
+            } else {
                 orderItem.setProjectCost(new BigDecimal(100));
             }
         }
@@ -113,11 +119,11 @@ public class OrderItemController {
      * 运动的最新状态
      */
     @PostMapping("/queryLeaderOrFollower")
-    public ResponseResult queryLeaderOrFollower( @RequestBody JSONObject jsonObject){
-        String isCaptain=jsonObject.get("isCaptain").toString();
-        String orderStatus=jsonObject.get("orderStatus").toString();
-        String wechatOpenid=jsonObject.get("wechatOpenid").toString();
-        List<OrderItem> orderItems = orderItemService.queryLeaderOrFollower(isCaptain, orderStatus,wechatOpenid);
+    public ResponseResult queryLeaderOrFollower(@RequestBody JSONObject jsonObject) {
+        String isCaptain = jsonObject.get("isCaptain").toString();
+        String orderStatus = jsonObject.get("orderStatus").toString();
+        String wechatOpenid = jsonObject.get("wechatOpenid").toString();
+        List<OrderItem> orderItems = orderItemService.queryLeaderOrFollower(isCaptain, orderStatus, wechatOpenid);
         ResponseResult resp = ResponseResult.makeSuccResponse(null, orderItems);
         return resp;
     }
@@ -125,6 +131,7 @@ public class OrderItemController {
 
     /**
      * 创建订单的信息
+     *
      * @param orderItem
      * @return
      */
@@ -140,16 +147,34 @@ public class OrderItemController {
 //            0开始游戏，1还在招募人员，主要是针对手动关闭订单开始游戏
             orderItem.setGameStatus("1");
             Integer totalNum = orderItem.getTotalNum();
-            if(1 == totalNum){
-//                订单只有一个人的情况
+//            订单只有一个人的情况
+            if (1 == totalNum) {
                 orderItem.setOrderStatus("1");
                 orderItem.setIsFull("0");
-            }else {
-                //            订单状态，0 组队中 1 待参加 2 已结束 3取消
+            } else {
+                //0 组队中 1 待参加 2： 正常结束 3：时间到组队失败 4：发起者人为取消订单）
                 orderItem.setOrderStatus("0");
                 //            0满员 1 未满员
                 orderItem.setIsFull("1");
             }
+            System.out.println(loginUrl);
+            //创建订单的时候给定该订单的图片url
+            for (int i = 1; i <= 10 ; i++) {
+                //其他给默认的图片
+                if ("99".equals(orderItem.getProjectId())) {
+                    orderItem.setSportImgUrl(loginUrl+"other.jpg");
+                    break;
+                }
+                /*
+                    首页的信息
+
+                 */
+                if ((i + "").equals(orderItem.getProjectId())) {
+                    orderItem.setSportImgUrl(loginUrl+i+".jpg");
+                    break;
+                }
+            }
+
             int item = orderItemService.insertOrderItem(orderItem);
             //订单创建的时候，需要将发起人的信息插入到order_details订单明细表
             orderDetails.setOrderId(orderItem.getId());
@@ -174,6 +199,7 @@ public class OrderItemController {
 
     /**
      * 订单人数未达标，人为关闭订单，意义是即使人员没有满也可以开始游戏
+     *
      * @param orderItem
      * @return
      */
@@ -184,7 +210,7 @@ public class OrderItemController {
         OrderItem orderItemBean = queryOrderItemAll.getList().get(0);
 //        0满员 1 未满员
         orderItemBean.setIsFull("1");
-//        0 组队中 1 待参加 2 已结束
+//        0 组队中 1 待参加 2： 正常结束 3：时间到组队失败 4：发起者人为取消订单）
         orderItemBean.setOrderStatus("1");
 //        按钮显示是否可以玩，不管人数满员否，0开始游戏，1还在招募人员
         orderItemBean.setGameStatus("0");
@@ -203,14 +229,15 @@ public class OrderItemController {
 
     /**
      * 发起人取消订单
+     *
      * @param orderItem
      * @return
      */
     @PostMapping("/cancleOrder")
     public ResponseResult cancleOrder(@RequestBody OrderItem orderItem) {
 
-        //        0 组队中 1 待参加 2 已结束 3 取消
-        orderItem.setOrderStatus("3");
+        //        0 组队中 1 待参加 2： 正常结束 3：时间到组队失败 4：发起者人为取消订单）
+        orderItem.setOrderStatus("4");
         orderItem.setUpdateTime(DateUtil.formatDateTime());
 
         ResponseResult resp = null;
@@ -227,6 +254,7 @@ public class OrderItemController {
 
     /**
      * 定时任务启动，关闭时间到期还没有满员的订单
+     *
      * @return
      */
     @PostMapping("/timerCloseOrder")
@@ -237,14 +265,14 @@ public class OrderItemController {
         if (!CollectionUtils.isEmpty(orderItemList)) {
             /*for (int i = 0; i < orderItemList.size(); i++) {
                 OrderItem queryOrderItem = orderItemList.get(i);
-//                0 组队中 1 待参加 2 已结束 3取消
+//                0 组队中 1 待参加 2： 正常结束 3：时间到组队失败 4：发起者人为取消订单）
                 queryOrderItem.setOrderStatus("3");
             }*/
-            hashMap.put("ids",orderItemList);
+            hashMap.put("ids", orderItemList);
             //批量更新数据的信息
             int i = orderItemService.updateOrderItemBatch(hashMap);
             if (i > 0) {
-                log.info("批量更新:{}",i);
+                log.info("批量更新:{}", i);
             }
         }
     }

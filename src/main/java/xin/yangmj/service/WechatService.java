@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import xin.yangmj.config.AppContext;
 import xin.yangmj.config.WechatAuthProperties;
-import xin.yangmj.mapper.ConsumerMapper;
 import xin.yangmj.dto.WechatAuthCodeResponse;
 import xin.yangmj.dto.WechatAuthenticationResponse;
 import xin.yangmj.entity.Consumer;
+import xin.yangmj.mapper.ConsumerMapper;
 import xin.yangmj.util.DateUtil;
 
 import java.io.IOException;
@@ -58,6 +58,11 @@ public class WechatService {
     public WechatAuthCodeResponse getWxSession(String code) {
         LOGGER.info(code);
         String urlString = "?appid={appid}&secret={srcret}&js_code={code}&grant_type={grantType}";
+        /*String apiUrl=wechatAuthProperties.getSessionHost()+"?appid="+wechatAuthProperties.getAppId()+"&secret="+wechatAuthProperties.getSecret()+"&js_code="+code+"&grant_type=authorization_code";
+        System.out.println(apiUrl);
+        String responseBody = HttpClientUtil.doGet(apiUrl);
+        System.out.println(responseBody);
+        JSONObject jsonObject = JSON.parseObject(responseBody);*/
         String response = wxAuthRestTemplate.getForObject(
                 wechatAuthProperties.getSessionHost() + urlString, String.class,
                 wechatAuthProperties.getAppId(),
@@ -103,16 +108,18 @@ public class WechatService {
 
     public void updateConsumerInfo(Consumer consumer) {
         Consumer consumerExist = consumerMapper.findConsumerByWechatOpenid(AppContext.getCurrentUserWechatOpenId());
-        consumerExist.setUpdatedBy(1L);
-        consumerExist.setUpdatedAt(DateUtil.formatDateTime());
-        consumerExist.setGender(consumer.getGender());
-        consumerExist.setAvatarUrl(consumer.getAvatarUrl());
-        consumerExist.setWechatOpenid(consumer.getWechatOpenid());
-        consumerExist.setEmail(consumer.getEmail());
-        consumerExist.setNickname(consumer.getNickname());
-        consumerExist.setPhone(consumer.getPhone());
-        consumerExist.setUsername(consumer.getUsername());
-        consumerMapper.updateConsumer(consumerExist);
+        if (null != consumerExist && !"".equals(consumerExist)) {
+            consumerExist.setUpdatedBy(1L);
+            consumerExist.setUpdatedAt(DateUtil.formatDateTime());
+            consumerExist.setGender(consumer.getGender());
+            consumerExist.setAvatarUrl(consumer.getAvatarUrl());
+            consumerExist.setWechatOpenid(consumer.getWechatOpenid());
+            consumerExist.setEmail(consumer.getEmail());
+            consumerExist.setNickname(consumer.getNickname());
+            consumerExist.setPhone(consumer.getPhone());
+            consumerExist.setUsername(consumer.getUsername());
+            consumerMapper.updateConsumer(consumerExist);
+        }
     }
 
 }

@@ -20,3 +20,6 @@ server:
         key-store: classpath:keystore.jks
         key-store-password: 24733956131
         key-store-type: JKS
+#配置文件的位置信息
+login:
+    url: https://coder.newlandfinance.com:9999/images/
