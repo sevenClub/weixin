@@ -25,7 +25,7 @@
             <property name="forceBigDecimals" value="true"/>
         </javaTypeResolver>
         &lt;!&ndash;生成Model类存放位置&ndash;&gt;
-        <javaModelGenerator targetPackage="xin.yangmj.entity2" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.yangmj.entity2" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
@@ -39,7 +39,7 @@
                 type="MIXEDMAPPER",生成基于注解的Java Model 和相应的Mapper对象  
                 type="XMLMAPPER",生成SQLMap XML文件和独立的Mapper接口  
         &ndash;&gt;
-        <javaClientGenerator type="XMLMAPPER" targetPackage="xin.yangmj.mapper" targetProject="src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.yangmj.mapper" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
         &lt;!&ndash;生成对应表及类名&ndash;&gt;

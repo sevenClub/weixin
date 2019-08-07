@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="xin.yangmj.mapper.OrderItemMapper" >
-  <resultMap id="BaseResultMap" type="xin.yangmj.entity.OrderItem" >
+<mapper namespace="com.yangmj.mapper.OrderItemMapper" >
+  <resultMap id="BaseResultMap" type="com.yangmj.entity.OrderItem" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="project_id" property="projectId" jdbcType="VARCHAR" />
     <result column="curr_Num" property="currNum" jdbcType="INTEGER" />
@@ -69,7 +69,7 @@
     delete from order_item
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insertOrderItem" parameterType="xin.yangmj.entity.OrderItem" useGeneratedKeys="true" keyProperty="id" >
+  <insert id="insertOrderItem" parameterType="com.yangmj.entity.OrderItem" useGeneratedKeys="true" keyProperty="id" >
 
     insert into order_item (id, project_id, curr_Num, 
       total_Num, is_full, game_status, 
@@ -86,7 +86,7 @@
       #{feeTags,jdbcType=VARCHAR}, #{activityHour,jdbcType=DECIMAL}, #{description,jdbcType=VARCHAR}, 
       #{contactDir,jdbcType=VARCHAR}, #{startWechatOpenid,jdbcType=VARCHAR},#{sportImgUrl,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="xin.yangmj.entity.OrderItem" >
+  <insert id="insertSelective" parameterType="com.yangmj.entity.OrderItem" >
     insert into order_item
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -213,7 +213,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateOrderItemByKeySelective" parameterType="xin.yangmj.entity.OrderItem" >
+  <update id="updateOrderItemByKeySelective" parameterType="com.yangmj.entity.OrderItem" >
     update order_item
     <set >
       <if test="projectId != null" >
@@ -276,7 +276,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateOrderItemByKey" parameterType="xin.yangmj.entity.OrderItem" >
+  <update id="updateOrderItemByKey" parameterType="com.yangmj.entity.OrderItem" >
     update order_item
     set project_id = #{projectId,jdbcType=VARCHAR},
       curr_Num = #{currNum,jdbcType=INTEGER},

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="xin.yangmj.mapper.ConsumerMapper">
+<mapper namespace="com.yangmj.mapper.ConsumerMapper">
 
-    <select id="findConsumerById" resultType="xin.yangmj.entity.Consumer">
+    <select id="findConsumerById" resultType="com.yangmj.entity.Consumer">
         SELECT
           `id`,
           `username`,
@@ -22,7 +22,7 @@
         WHERE `id` = #{id}
     </select>
 
-    <select id="findConsumerByWechatOpenid" resultType="xin.yangmj.entity.Consumer">
+    <select id="findConsumerByWechatOpenid" resultType="com.yangmj.entity.Consumer">
         SELECT
           `id`,
           `username`,
@@ -43,7 +43,7 @@
     </select>
 
     
-    <insert id="insertConsumer" parameterType="xin.yangmj.entity.Consumer">
+    <insert id="insertConsumer" parameterType="com.yangmj.entity.Consumer">
         INSERT INTO `consumer` (
           `username`,
           `wechat_openid`,
@@ -75,7 +75,7 @@
           )
     </insert>
 
-    <update id="updateConsumer" parameterType="xin.yangmj.entity.Consumer">
+    <update id="updateConsumer" parameterType="com.yangmj.entity.Consumer">
         UPDATE
           `consumer`
         <trim prefix="SET" suffixOverrides=",">
