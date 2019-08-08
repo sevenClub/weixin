@@ -1,6 +1,15 @@
 package com.yangmj.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.yangmj.common.MyPageInfo;
+import com.yangmj.common.ResponseResult;
+import com.yangmj.common.SystemDefault;
+import com.yangmj.entity.OrderDetails;
+import com.yangmj.entity.OrderItem;
+import com.yangmj.service.OrderDetailsService;
+import com.yangmj.service.OrderItemService;
+import com.yangmj.util.CommonUtils;
+import com.yangmj.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,13 +20,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.yangmj.common.MyPageInfo;
-import com.yangmj.common.ResponseResult;
-import com.yangmj.entity.OrderDetails;
-import com.yangmj.entity.OrderItem;
-import com.yangmj.service.OrderDetailsService;
-import com.yangmj.service.OrderItemService;
-import com.yangmj.util.DateUtil;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -53,10 +55,6 @@ public class OrderItemController {
             04 10人以上
          */
 
-        /*if ("01".equals(num)) {
-            orderItem.setTotalNum(1);
-            orderItem.setTotalNumUp(5);
-        }*/
         //根据人数筛选
         String numType = orderItem.getNumType();
         String costRMB = orderItem.getCostRMB();
@@ -103,7 +101,7 @@ public class OrderItemController {
                 orderItem.setProjectCost(new BigDecimal(100));
             }
         }
-        //根据日期筛选
+        //根据日期筛选,转换时间的格式
         if (!StringUtils.isEmpty(queryDate)) {
 //            yyyy/mm/dd to yyyy-mm-dd
             String yyyyToYYYY = DateUtil.yyyyToYYYY(queryDate);
@@ -120,11 +118,23 @@ public class OrderItemController {
      */
     @PostMapping("/queryLeaderOrFollower")
     public ResponseResult queryLeaderOrFollower(@RequestBody JSONObject jsonObject) {
+        ResponseResult resp = null;
+        if (jsonObject.size() == 0) {
+            log.info("参数缺失，请稍后再试");
+            return resp = ResponseResult.makeFailResponse(SystemDefault.SERVER_ERROR_500, "");
+        }
         String isCaptain = jsonObject.get("isCaptain").toString();
         String orderStatus = jsonObject.get("orderStatus").toString();
         String wechatOpenid = jsonObject.get("wechatOpenid").toString();
-        List<OrderItem> orderItems = orderItemService.queryLeaderOrFollower(isCaptain, orderStatus, wechatOpenid);
-        ResponseResult resp = ResponseResult.makeSuccResponse(null, orderItems);
+
+        try {
+            List<OrderItem> orderItems = orderItemService.queryLeaderOrFollower(isCaptain, orderStatus, wechatOpenid);
+            resp = ResponseResult.makeSuccResponse(null, orderItems);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("查询失败queryLeaderOrFollower，原因"+e.toString());
+            resp = ResponseResult.makeFailResponse(SystemDefault.SERVER_ERROR_500, "");
+        }
         return resp;
     }
 
@@ -138,23 +148,33 @@ public class OrderItemController {
     @PostMapping("/createOrderItem")
     @Transactional
     public ResponseResult createProjectItem(@RequestBody OrderItem orderItem) {
+        ResponseResult resp = null;
+        //验证手机号是否输入或输入是否合法
+        String phone = orderItem.getContactDir();
+        String phoneResult = CommonUtils.checkPhone(phone);
+        if ("01".equals(phoneResult)) {
+            return ResponseResult.makeFailResponse(SystemDefault.MOBILE_MISSING, "");
+        }
+        if ("02".equals(phoneResult)){
+                return ResponseResult.makeFailResponse(SystemDefault.MOBILE_ERROR, "");
+        }
 
         OrderDetails orderDetails = new OrderDetails();
-        ResponseResult resp = null;
+
         try {
-//            发起订单的人初始为1
+            //发起订单的人初始为1
             orderItem.setCurrNum(1);
-//            0开始游戏，1还在招募人员，主要是针对手动关闭订单开始游戏
+            //0开始游戏，1还在招募人员，主要是针对手动关闭订单开始游戏
             orderItem.setGameStatus("1");
             Integer totalNum = orderItem.getTotalNum();
-//            订单只有一个人的情况
+            //订单只有一个人的情况
             if (1 == totalNum) {
                 orderItem.setOrderStatus("1");
                 orderItem.setIsFull("0");
             } else {
-                //0 组队中 1 待参加 2： 正常结束 3：时间到组队失败 4：发起者人为取消订单）
+                //0 组队中 1 待参加 2： 正常结束 3：时间到组队失败 4：发起者人为取消订单
                 orderItem.setOrderStatus("0");
-                //            0满员 1 未满员
+                //0满员 1 未满员
                 orderItem.setIsFull("1");
             }
             System.out.println(loginUrl);
@@ -165,16 +185,13 @@ public class OrderItemController {
                     orderItem.setSportImgUrl(loginUrl+"other.jpg");
                     break;
                 }
-                /*
-                    首页的信息
-
-                 */
+                //常用项目的分类
                 if ((i + "").equals(orderItem.getProjectId())) {
                     orderItem.setSportImgUrl(loginUrl+i+".jpg");
                     break;
                 }
             }
-
+            //TODO 创建订单的时候需要判断当前时间点是否冲突,待讨论定义
             int item = orderItemService.insertOrderItem(orderItem);
             //订单创建的时候，需要将发起人的信息插入到order_details订单明细表
             orderDetails.setOrderId(orderItem.getId());
@@ -184,21 +201,20 @@ public class OrderItemController {
             orderDetails.setProjectFee(orderItem.getProjectCost());
             //0是 1否 发起人
             orderDetails.setIsCaptain("0");
-//            int i = 1/0;
             String details = orderDetailsService.insertOrderDetails(orderDetails);
             resp = ResponseResult.makeSuccResponse(null, item);
         } catch (Exception e) {
             e.printStackTrace();
-            log.info(e.toString());
+            log.error(e.toString());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            resp = ResponseResult.makeFailResponse(null, "服务器繁忙");
+            resp = ResponseResult.makeFailResponse(SystemDefault.SERVER_ERROR_500, "");
         }
         return resp;
     }
 
 
     /**
-     * 订单人数未达标，人为关闭订单，意义是即使人员没有满也可以开始游戏
+     * 订单人数未达标，人为关闭订单，即使人员没有满也可以开始游戏
      *
      * @param orderItem
      * @return
@@ -221,7 +237,7 @@ public class OrderItemController {
             resp = ResponseResult.makeSuccResponse(null, itemResult);
         } catch (Exception e) {
             e.printStackTrace();
-            resp = ResponseResult.makeFailResponse("网络错误", "");
+            resp = ResponseResult.makeFailResponse(SystemDefault.NETWORK_ERROR, "");
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
         return resp;

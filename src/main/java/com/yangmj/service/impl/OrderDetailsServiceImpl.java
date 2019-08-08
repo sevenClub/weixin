@@ -11,6 +11,7 @@ import com.yangmj.entity.OrderItem;
 import com.yangmj.mapper.OrderDetailsMapper;
 import com.yangmj.mapper.OrderItemMapper;
 import com.yangmj.service.OrderDetailsService;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
         Map mapNum = partInAndAllNumMap.get(0);
 //        isFull 0满员 1 未满员
         String isFull = (String)mapNum.get("isFull");
-        if("1".equals(isFull)){
+        if("1".equals(isFull) || StringUtils.isEmpty(isFull)){
             //参与人数 partInNum
             int partInNum = ((Number)mapNum.get("partInNum")).intValue();
 //        Number numCount = (Number)hashMap.get(orderItemquery.getId());
@@ -72,8 +73,19 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
                 return result = "01";
             }
         }else {
-            return "参数不完整";
+            return "该项目人数满了，请看看其他活动哟~";
         }
 
+    }
+
+    /**
+     * 查询是否重复参加该订单
+     * @param orderId
+     * @param wechatOpenid
+     * @return
+     */
+    @Override
+    public int verifyRepeatedPartIn(Integer orderId, String wechatOpenid) {
+        return orderDetailsMapper.verifyRepeatedPartIn(orderId, wechatOpenid);
     }
 }

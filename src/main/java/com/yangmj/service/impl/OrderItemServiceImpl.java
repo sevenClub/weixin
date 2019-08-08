@@ -29,14 +29,6 @@ public class OrderItemServiceImpl implements OrderItemService {
         //订单信息返回页面包含该订单目前的人数
         List<Map> listNumCount = orderDetailsMapper.selectConversationList();
         HashMap<Object, Object> hashMap = CommonQuery.setCurrentNum(listNumCount);
-       /* HashMap<Object, Object> hashMap = new HashMap<>();
-        for(int i = 0;i<listNumCount.size() ;i++){
-            Map map = listNumCount.get(i);
-            Object key = map.get("orderId");
-            Object value = map.get("countNumFore");
-            hashMap.put(key,value);
-        }*/
-
         if(!CollectionUtils.isEmpty(orderItemList)){
             for (int i = 0; i < orderItemList.size(); i++) {
                 OrderItem orderItemquery = orderItemList.get(i);
@@ -57,14 +49,15 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Override
     public List<OrderItem> queryLeaderOrFollower(String isCaptain, String orderStatus,String wechatOpenid) {
 
+        //查看已经结束的的，包含2： 正常结束 3：时间到组队失败 4：发起者人为取消订单
         if ("2".equals(orderStatus)) {
             orderStatus = "'2','3','4'";
         }
+        int j = 1 / 0;
         List<OrderItem> orderItemList = orderItemMapper.queryLeaderOrFollower(isCaptain, orderStatus,wechatOpenid);
 
         List<Map> listNumCount = orderDetailsMapper.selectConversationList();
         HashMap<Object, Object> hashMap = CommonQuery.setCurrentNum(listNumCount);
-
         if(!CollectionUtils.isEmpty(orderItemList)){
             for (int i = 0; i < orderItemList.size(); i++) {
                 OrderItem orderItemquery = orderItemList.get(i);

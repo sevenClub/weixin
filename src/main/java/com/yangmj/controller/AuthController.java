@@ -1,5 +1,6 @@
 package com.yangmj.controller;
 
+import com.yangmj.common.SystemDefault;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,15 +52,23 @@ public class AuthController {
         } catch (Exception e) {
             log.info(e.toString());
             e.printStackTrace();
-            resp = ResponseResult.makeFailResponse("miss code/invalid code", "");
+            resp = ResponseResult.makeFailResponse(SystemDefault.PARAMETER_MISSING+"miss code/invalid code", "");
 //            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
         return resp;
     }
 
     @PostMapping("/updateConsumerInfo")
-    public void updateConsumerInfo(@RequestBody Consumer consumer) {
-        wechatService.updateConsumerInfo(consumer);
+    public ResponseResult updateConsumerInfo(@RequestBody Consumer consumer) {
+        ResponseResult resp = null;
+        String consumerInfoResult = wechatService.updateConsumerInfo(consumer);
+
+        if ("00".equals(consumerInfoResult)) {
+            resp = ResponseResult.makeSuccResponse(null, consumerInfoResult);
+        } else {
+            resp = ResponseResult.makeFailResponse(SystemDefault.NETWORK_ERROR, "");
+        }
+        return resp;
     }
 
 }

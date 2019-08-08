@@ -32,11 +32,20 @@ public interface OrderDetailsMapper {
 
 
     /**
-     * 拼单前判断该项目目前人数是否超了，需要判断后插入
+     * 拼单前判断该项目目前人数是否超了，需要判断后插入数据
      * 该订单还在线的人，且该订单还是激活状态
      *
      */
     @Select("select count(1) partInNum, item.total_Num totalNum,is_full isFull from order_item item ,order_details detail where detail.order_id = item.id and detail.order_id = #{orderId} and detail.is_active ='0' and item.order_status ='0'")
     List<Map> judgeStaffFull(@Param("orderId") Integer orderId);
+
+    /**
+     * 查询是否重复参加该订单
+     * @param orderId
+     * @param wechatOpenid
+     * @return
+     */
+    @Select("select count(1) countNum from order_details detail where detail.order_id = #{orderId} and detail.wechat_openid =#{wechatOpenid} and detail.is_active ='0'")
+    int verifyRepeatedPartIn(@Param("orderId") Integer orderId, @Param("wechatOpenid") String wechatOpenid);
 
 }

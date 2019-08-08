@@ -12,8 +12,8 @@ import java.util.GregorianCalendar;
 /**
  * 日期工具类。<br>
  * 
- * @author yetaishan
- * @version 1.0 ,2010-05-12
+ * @author liufei
+ * @version
  */
 /*
  * 修订历史 版本|日期|修改人|修改信息 1.0  增加doc......
