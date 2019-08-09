@@ -43,11 +43,10 @@ public class ThirdSessionAuthFilter extends OncePerRequestFilter {
             return;
         }
         //测试环境打开的，避免其余的接口访问
-        /*if (true) {
+        if (true) {
             chain.doFilter(request, response);
             return;
         }
-*/
        /* if (null == authHeader || !authHeader.startsWith("Bearer")) {
             throw new RuntimeException("非法访问用户");
         }*/

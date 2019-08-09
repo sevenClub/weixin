@@ -9,7 +9,11 @@ public class Consumer extends BaseEntity {
     private String username;
     private String wechatOpenid;
     private Long phone;
-    private String nickname;
+    private String nickName;
+    private String language;
+    private String city;
+    private String province;
+    private String country;
     private String avatarUrl;
     private Gender gender;
     private String email;
@@ -52,13 +56,6 @@ public class Consumer extends BaseEntity {
         this.phone = phone;
     }
 
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
 
     public String getAvatarUrl() {
         return avatarUrl;
@@ -132,6 +129,46 @@ public class Consumer extends BaseEntity {
         this.updatedAt = updatedAt;
     }
 
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     @Override
     public String toString() {
         return "Consumer{" +
@@ -139,7 +176,7 @@ public class Consumer extends BaseEntity {
                 ", username='" + username + '\'' +
                 ", wechatOpenid='" + wechatOpenid + '\'' +
                 ", phone=" + phone +
-                ", nickname='" + nickname + '\'' +
+                ", nickName='" + nickName + '\'' +
                 ", avatarUrl='" + avatarUrl + '\'' +
                 ", gender=" + gender +
                 ", email='" + email + '\'' +

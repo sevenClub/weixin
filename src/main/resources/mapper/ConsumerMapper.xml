@@ -63,7 +63,7 @@
             #{username},
             #{wechatOpenid},
             #{phone},
-            #{nickname},
+            #{nickName},
             #{avatarUrl},
             #{gender},
             #{email},
@@ -85,8 +85,8 @@
             <if test="phone != null and phone != ''">
                 `phone` = #{phone},
             </if>
-            <if test="nickname != null and nickname != ''">
-                `nickname` = #{nickname},
+            <if test="nickName != null and nickName != ''">
+                `nickname` = #{nickName},
             </if>
             <if test="avatarUrl != null and avatarUrl != ''">
                 `avatar_url` = #{avatarUrl},

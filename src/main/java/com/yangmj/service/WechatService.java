@@ -2,6 +2,12 @@ package com.yangmj.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+import com.yangmj.config.WechatAuthProperties;
+import com.yangmj.dto.WechatAuthCodeResponse;
+import com.yangmj.dto.WechatAuthenticationResponse;
+import com.yangmj.entity.Consumer;
+import com.yangmj.mapper.ConsumerMapper;
+import com.yangmj.util.DateUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,13 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import com.yangmj.config.AppContext;
-import com.yangmj.config.WechatAuthProperties;
-import com.yangmj.dto.WechatAuthCodeResponse;
-import com.yangmj.dto.WechatAuthenticationResponse;
-import com.yangmj.entity.Consumer;
-import com.yangmj.mapper.ConsumerMapper;
-import com.yangmj.util.DateUtil;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -104,7 +103,8 @@ public class WechatService {
     public String updateConsumerInfo(Consumer consumer) {
         String result = "00";
         try {
-            Consumer consumerExist = consumerMapper.findConsumerByWechatOpenid(AppContext.getCurrentUserWechatOpenId());
+//            Consumer consumerExist = consumerMapper.findConsumerByWechatOpenid(AppContext.getCurrentUserWechatOpenId());
+            Consumer consumerExist = consumerMapper.findConsumerByWechatOpenid(consumer.getWechatOpenid());
             if (null != consumerExist && !"".equals(consumerExist)) {
                 consumerExist.setUpdatedBy(1L);
                 consumerExist.setUpdatedAt(DateUtil.formatDateTime());
@@ -112,10 +112,12 @@ public class WechatService {
                 consumerExist.setAvatarUrl(consumer.getAvatarUrl());
                 consumerExist.setWechatOpenid(consumer.getWechatOpenid());
                 consumerExist.setEmail(consumer.getEmail());
-                consumerExist.setNickname(consumer.getNickname());
+                consumerExist.setNickName(consumer.getNickName());
                 consumerExist.setPhone(consumer.getPhone());
                 consumerExist.setUsername(consumer.getUsername());
                 consumerMapper.updateConsumer(consumerExist);
+            } else {
+                result = "02";
             }
         } catch (Exception e) {
             e.printStackTrace();

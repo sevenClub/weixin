@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -61,13 +62,23 @@ public class AuthController {
     @PostMapping("/updateConsumerInfo")
     public ResponseResult updateConsumerInfo(@RequestBody Consumer consumer) {
         ResponseResult resp = null;
+        if (StringUtils.isEmpty(consumer.getWechatOpenid())) {
+            log.info("更新用户信息缺少openid主查询信息");
+            return resp = ResponseResult.makeFailResponse(SystemDefault.PARAMETER_MISSING, "");
+        }
         String consumerInfoResult = wechatService.updateConsumerInfo(consumer);
 
         if ("00".equals(consumerInfoResult)) {
             resp = ResponseResult.makeSuccResponse(null, consumerInfoResult);
-        } else {
+        }
+        else if ("02".equals(consumerInfoResult)) {
+            log.info("updateConsumerInfo+++更新用户信息失败，可能用户不存在，或者其他网络异常");
+            resp = ResponseResult.makeFailResponse("用户失效或者授权过期", "");
+        }else {
+            log.info("updateConsumerInfo+++更新用户信息失败，可能用户不存在，或者其他网络异常");
             resp = ResponseResult.makeFailResponse(SystemDefault.NETWORK_ERROR, "");
         }
+
         return resp;
     }
 
