@@ -27,7 +27,16 @@ public interface OrderItemService {
 
     int updateOrderItemByKeySelective(OrderItem record);
 
+    /**
+     * 定时任务启动，关闭时间到期还没有满员的订单
+     * @return
+     */
     List<OrderItem> timerCloseOrder();
 
     int updateOrderItemBatch(HashMap hashMap);
+
+    /**
+     * 订单时间到了最后的时间，该订单进行关闭,正常游戏结束的订单
+     */
+    List<OrderItem> timerCloseOrderNormalEnd();
 }

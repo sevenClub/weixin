@@ -95,4 +95,9 @@ public class OrderItemServiceImpl implements OrderItemService {
     public int updateOrderItemBatch(HashMap hashMap) {
         return orderItemMapper.updateOrderItemBatch(hashMap);
     }
+
+    @Override
+    public List<OrderItem> timerCloseOrderNormalEnd() {
+        return orderItemMapper.timerCloseOrderNormalEnd();
+    }
 }

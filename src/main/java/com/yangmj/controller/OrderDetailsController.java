@@ -89,6 +89,7 @@ public class OrderDetailsController {
 //                参数不完整，如参数传递错误
                 resp = ResponseResult.makeFailResponse(details,null );
             }
+            //TODO 人数达标返回消息，如消息模板id，和数据的信息相关
         } catch (Exception e) {
             e.printStackTrace();
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

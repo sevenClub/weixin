@@ -318,10 +318,9 @@
   <update id="updateOrderItemBatch" parameterType="java.util.Map" >
     update order_item
     <set >
-      <!--<if test="orderStatus != null" >
-        order_status = #{orderStatus,jdbcType=VARCHAR},
-      </if>-->
-      order_status = '3',
+      <if test="status != null and status != ''" >
+        order_status = #{status},
+      </if>
       update_time = now()
     </set>
     where id in (

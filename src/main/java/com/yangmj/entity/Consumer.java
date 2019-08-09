@@ -10,10 +10,7 @@ public class Consumer extends BaseEntity {
     private String wechatOpenid;
     private Long phone;
     private String nickName;
-    private String language;
-    private String city;
-    private String province;
-    private String country;
+
     private String avatarUrl;
     private Gender gender;
     private String email;
@@ -23,6 +20,12 @@ public class Consumer extends BaseEntity {
     private String createdAt;
     private Long updatedBy;
     private String updatedAt;
+
+    //暂时没有入库
+    private String language;
+    private String city;
+    private String province;
+    private String country;
 
     public Long getId() {
         return id;

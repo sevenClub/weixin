@@ -14,4 +14,14 @@ public class ConsumerServiceImpl implements ConsumerService {
     public Consumer findConsumerByWechatOpenid(String wechatOpenid) {
         return consumerMapper.findConsumerByWechatOpenid(wechatOpenid);
     }
+
+    @Override
+    public void insertConsumer(Consumer consumer) {
+        consumerMapper.insertConsumer(consumer);
+    }
+
+    @Override
+    public void updateConsumer(Consumer consumer) {
+        consumerMapper.updateConsumer(consumer);
+    }
 }

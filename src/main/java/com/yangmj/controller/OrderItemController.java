@@ -13,6 +13,8 @@ import com.yangmj.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.CollectionUtils;
@@ -27,6 +29,8 @@ import java.util.List;
 
 @RestController
 @Slf4j
+@Configuration      //1.主要用于标记配置类，兼备Component的效果。
+@EnableScheduling   // 2.开启定时任务
 public class OrderItemController {
 
     @Autowired
@@ -273,22 +277,20 @@ public class OrderItemController {
      *
      * @return
      */
-    @PostMapping("/timerCloseOrder")
+    //@PostMapping("/timerCloseOrder") //页面测试
+    //定时任务时间的
+//    @Scheduled(cron = "0/10 * * * * ?")
     public void timerCloseOrderNoFull() {
-
         List<OrderItem> orderItemList = orderItemService.timerCloseOrder();
         HashMap<Object, Object> hashMap = new HashMap<>();
         if (!CollectionUtils.isEmpty(orderItemList)) {
-            /*for (int i = 0; i < orderItemList.size(); i++) {
-                OrderItem queryOrderItem = orderItemList.get(i);
-//                0 组队中 1 待参加 2： 正常结束 3：时间到组队失败 4：发起者人为取消订单）
-                queryOrderItem.setOrderStatus("3");
-            }*/
             hashMap.put("ids", orderItemList);
+            //3 为人数未满订单关闭
+            hashMap.put("status", "3");
             //批量更新数据的信息
             int i = orderItemService.updateOrderItemBatch(hashMap);
             if (i > 0) {
-                log.info("批量更新:{}", i);
+                log.info("批量更新关闭时间到期还没有满员的订单:{}", i);
             }
         }
     }
@@ -296,8 +298,21 @@ public class OrderItemController {
     /**
      * 订单时间到了最后的时间，该订单进行关闭
      */
-    @PostMapping("/timerCloseOrderNormalEnd")
+//    @PostMapping("/timerCloseOrderNormalEnd")
+//    @Scheduled(cron = "0/10 * * * * ?")
     public void timerCloseOrderNormalEnd() {
+        List<OrderItem> orderItemList = orderItemService.timerCloseOrderNormalEnd();
+        HashMap<Object, Object> hashMap = new HashMap<>();
+        if (!CollectionUtils.isEmpty(orderItemList)) {
+            hashMap.put("ids", orderItemList);
+            //2为订单正常关闭
+            hashMap.put("status", "2");
+            //批量更新数据的信息
+            int i = orderItemService.updateOrderItemBatch(hashMap);
+            if (i > 0) {
+                log.info("批量更新关闭时间到期正常结束的订单数量:{}", i);
+            }
+        }
 
     }
 

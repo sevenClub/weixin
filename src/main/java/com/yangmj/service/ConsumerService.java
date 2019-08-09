@@ -11,4 +11,8 @@ public interface ConsumerService {
      * @return
      */
     Consumer findConsumerByWechatOpenid(String wechatOpenid);
+
+    void insertConsumer(Consumer consumer);
+
+    void updateConsumer(Consumer consumer);
 }

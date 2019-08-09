@@ -65,10 +65,12 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
                         //                0可以开始游戏，1还在招募人员
                         queryItem.setGameStatus("0");
                         orderItemMapper.updateOrderItemByKey(queryItem);
+                        //TODO 最后一个人拼团成功后，返回服务通知消息，该项目的信息
+//                        result ="notice_ok";
                     }
 
                 }
-                return result = "00";
+                return result;
             }else {
                 return result = "01";
             }

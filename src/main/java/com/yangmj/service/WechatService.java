@@ -100,6 +100,11 @@ public class WechatService {
         }
     }
 
+    /**
+     * 更新用户的信息
+     * @param consumer
+     * @return
+     */
     public String updateConsumerInfo(Consumer consumer) {
         String result = "00";
         try {
