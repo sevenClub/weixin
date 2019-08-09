@@ -47,10 +47,10 @@ public class ThirdSessionAuthFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
             return;
         }
-       /* if (null == authHeader || !authHeader.startsWith("Bearer")) {
+       /* if (null == authHeader || !authHeader.startsWith("Newland")) {
             throw new RuntimeException("非法访问用户");
         }*/
-        // The part after "Bearer "
+        // The part after "Newland "
         final String thirdSessionId = authHeader.substring(tokenHead.length());
         String wxSessionObj = stringRedisTemplate.opsForValue().get(thirdSessionId);
         if (StringUtils.isEmpty(wxSessionObj)) {
