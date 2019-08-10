@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="xin.yangmj.mapper.OrderItemMapper" >
-  <resultMap id="BaseResultMap" type="xin.yangmj.entity.OrderItem" >
+<mapper namespace="com.yangmj.mapper.OrderItemMapper" >
+  <resultMap id="BaseResultMap" type="com.yangmj.entity.OrderItem" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="project_id" property="projectId" jdbcType="VARCHAR" />
     <result column="curr_Num" property="currNum" jdbcType="INTEGER" />
@@ -36,13 +36,40 @@
       <if test="id != null and id != ''"  >
         AND id = #{id,jdbcType=INTEGER}
       </if>
+      <if test="projectId != null and projectId != ''"  >
+        AND project_id = #{projectId}
+      </if>
+      <if test="totalNum != null and totalNum != ''"  >
+        <![CDATA[ AND total_Num >= #{totalNum}]]>
+      </if>
+      <if test="totalNumUp != null and totalNumUp != ''"  >
+        <![CDATA[ AND  total_Num < #{totalNumUp}]]>
+      </if>
+      <if test="projectCost != null and projectCost != ''"  >
+        <![CDATA[ AND project_cost >= #{projectCost}]]>
+      </if>
+      <if test="endPrice != null and endPrice != ''"  >
+        <![CDATA[ AND  project_cost < #{endPrice}]]>
+      </if>
+      <if test="actureStartTm != null and actureStartTm != ''"  >
+        <![CDATA[ AND acture_start_tm >= #{actureStartTm}]]>
+      </if>
+      <if test="endTime != null and endTime != ''"  >
+        <![CDATA[ AND  end_time <= #{endTime}]]>
+      </if>
+      <if test="feeTags != null and feeTags != ''"  >
+        <![CDATA[ AND  fee_tags = #{feeTags}]]>
+      </if>
+      <if test="actureStartTm != null and actureStartTm != ''"  >
+        AND acture_start_tm like #{actureStartTm}"%"
+      </if>
     </where>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from order_item
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insertOrderItem" parameterType="xin.yangmj.entity.OrderItem" useGeneratedKeys="true" keyProperty="id" >
+  <insert id="insertOrderItem" parameterType="com.yangmj.entity.OrderItem" useGeneratedKeys="true" keyProperty="id" >
 
     insert into order_item (id, project_id, curr_Num, 
       total_Num, is_full, game_status, 
@@ -50,16 +77,16 @@
       create_time, update_time, acture_start_tm, 
       end_time, sport_title, project_cost, 
       fee_tags, activity_hour, description, 
-      contact_dir, start_wechat_openid)
+      contact_dir, start_wechat_openid, sport_img_url)
     values (#{id,jdbcType=INTEGER}, #{projectId,jdbcType=VARCHAR}, #{currNum,jdbcType=INTEGER}, 
       #{totalNum,jdbcType=INTEGER}, #{isFull,jdbcType=VARCHAR}, #{gameStatus,jdbcType=VARCHAR}, 
       #{endPrice,jdbcType=DECIMAL}, #{gameLocation,jdbcType=VARCHAR}, #{orderStatus,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=VARCHAR}, #{actureStartTm,jdbcType=VARCHAR}, 
       #{endTime,jdbcType=VARCHAR}, #{sportTitle,jdbcType=VARCHAR}, #{projectCost,jdbcType=DECIMAL}, 
       #{feeTags,jdbcType=VARCHAR}, #{activityHour,jdbcType=DECIMAL}, #{description,jdbcType=VARCHAR}, 
-      #{contactDir,jdbcType=VARCHAR}, #{startWechatOpenid,jdbcType=VARCHAR})
+      #{contactDir,jdbcType=VARCHAR}, #{startWechatOpenid,jdbcType=VARCHAR},#{sportImgUrl,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="xin.yangmj.entity.OrderItem" >
+  <insert id="insertSelective" parameterType="com.yangmj.entity.OrderItem" >
     insert into order_item
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -186,7 +213,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="xin.yangmj.entity.OrderItem" >
+  <update id="updateOrderItemByKeySelective" parameterType="com.yangmj.entity.OrderItem" >
     update order_item
     <set >
       <if test="projectId != null" >
@@ -249,7 +276,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="xin.yangmj.entity.OrderItem" >
+  <update id="updateOrderItemByKey" parameterType="com.yangmj.entity.OrderItem" >
     update order_item
     set project_id = #{projectId,jdbcType=VARCHAR},
       curr_Num = #{currNum,jdbcType=INTEGER},
@@ -271,5 +298,35 @@
       contact_dir = #{contactDir,jdbcType=VARCHAR},
       start_wechat_openid = #{startWechatOpenid,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <insert id ="batchInsert" parameterType="java.util.List" >
+    insert into order_item
+    (recon_date, contract_no, receipt_no,
+    sys_identi, trade_time,core_amt,
+    cp_amt, balance, recon_file_name, recon_result)
+    values
+    <foreach collection ="list" item="item" index= "index" separator =",">
+      (
+      #{item.reconDate}, #{item.contractNo}, #{item.receiptNo},
+      #{item.sysIdenti}, #{item.tradeTime},#{item.coreAmt},
+      #{item.cpAmt}, #{item.balance}, #{item.reconFileName}, #{item.reconResult}
+      )
+    </foreach >
+  </insert >
+
+  <update id="updateOrderItemBatch" parameterType="java.util.Map" >
+    update order_item
+    <set >
+      <if test="status != null and status != ''" >
+        order_status = #{status},
+      </if>
+      update_time = now()
+    </set>
+    where id in (
+    <foreach collection="ids" item="orderIds" index="index" separator=",">
+      #{orderIds.id}
+    </foreach>
+    )
   </update>
 </mapper>

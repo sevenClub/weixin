@@ -1,0 +1,112 @@
+CREATE TABLE `project_item` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `project_id` varchar(3) NOT NULL DEFAULT '' COMMENT '项目id',
+  `project_name` varchar(20) DEFAULT NULL COMMENT '项目名称',
+  `total_Num` int  COMMENT '参赛人数',
+  `project_cost` decimal(15,2) DEFAULT NULL COMMENT '价格费用',
+  `discount` decimal(15,2) DEFAULT NULL COMMENT '优惠力度',
+  `end_price` decimal(15,2) DEFAULT NULL COMMENT '最终价格',
+  `game_location` varchar(50) DEFAULT NULL COMMENT '场地位置',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` varchar(20) DEFAULT NULL COMMENT '更新时间',
+  运行时间
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='运动项目表';
+
+projectId
+projectName
+totalNum
+projectCost
+discount
+endPrice
+gameLocation
+
+CREATE TABLE `order_item` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `project_id` varchar(3) NOT NULL  COMMENT '项目id',
+  `curr_Num` int(2) DEFAULT NULL COMMENT '已经有人数',
+  `total_Num` int(2) DEFAULT NULL COMMENT '总人数',
+  `is_full` varchar(1) DEFAULT NULL COMMENT '是否满员',
+  `game_status` varchar(1) DEFAULT NULL COMMENT '是否终止',
+  `end_price` decimal(15,2) DEFAULT NULL COMMENT '最终价格',
+  `game_location` varchar(50) DEFAULT NULL COMMENT '场地位置',
+  `order_status` varchar(2) DEFAULT NULL COMMENT '订单状态',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` varchar(20) DEFAULT NULL COMMENT '更新时间',
+  `acture_start_tm` varchar(20) DEFAULT NULL COMMENT '订单实际开始时间',
+  `end_time` varchar(20) DEFAULT NULL COMMENT '订单终止时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='订单表';
+
+CREATE TABLE `order_details` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `wechat_openid` varchar(32) NOT NULL  COMMENT '参赛人员openid',
+  `is_active` varchar(2) DEFAULT NULL COMMENT '是否退出',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` varchar(20) DEFAULT NULL COMMENT '更新时间',
+  `project_fee` decimal(15,2) DEFAULT NULL COMMENT '费用',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='订单详情表';
+auth
+{
+	"id":"",
+	"username":"",
+	"phone":"",
+	"gender":"0",
+	"vcode":"",
+	"password":"",
+	"promotionCode":"",
+	"InvitationCode":"",
+	"clientAssertion":"",
+    "code":"4242342342425sfs"
+}
+createProjectItem
+{
+	"projectName":"骑马",
+	"totalNum":"2",
+	"projectCost":"150",
+	"gameLocation":"上海",
+	"openTime":"8:00-13:00",
+	"sportActiveTm":"2"
+}
+updateProjectItem
+{
+	"id":82,
+	"projectId":"EQCtWHlI",
+	"projectName":"骑马2",
+	"totalNum":"2",
+	"projectCost":"150",
+	"gameLocation":"上海",
+	"openTime":"8:00-13:00",
+	"sportActiveTm":"2"
+}
+查询所有订单
+findAllOrders
+{}
+createOrderItem
+{"projectId":"99",
+	"sportTitle":"滑翔翼",
+	"totalNum":"8",
+	"gameLocation":"天柱山",
+	"actureStartTm":"2019-8-7 15:00:00",
+	"endTime":"2019-8-7 18:00:00",
+	"projectCost":"",
+	"feeTags":"AA",
+	"description":"第五空间",
+	"startWechatOpenid":"LIUYIH09",
+	"contactDir":"17100412345"
+}
+参与拼单
+takePartInSportDetails
+{
+	"id":87,
+	"startWechatOpenid":"015",
+	"contactDir":""
+	
+}
+查询我的发起或者我参加的项目
+queryLeaderOrFollower
+{
+	
+}
+select id, project_id, curr_Num, total_Num, is_full, game_status, end_price, game_location, order_status, create_time, update_time, acture_start_tm, end_time, sport_title, project_cost, fee_tags, activity_hour, description, contact_dir, start_wechat_openid from order_item WHERE total_Num >= ? AND total_Num < ? LIMIT ?

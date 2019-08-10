@@ -15,3 +15,6 @@ mybatis:
     configuration:
         mapUnderscoreToCamelCase: true
         default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
+#配置文件的位置信息
+login:
+    url: http://127.0.0.1:8443/images/

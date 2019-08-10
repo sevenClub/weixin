@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="xin.yangmj.mapper.OrderDetailsMapper" >
-  <resultMap id="BaseResultMap" type="xin.yangmj.entity.OrderDetails" >
+<mapper namespace="com.yangmj.mapper.OrderDetailsMapper" >
+  <resultMap id="BaseResultMap" type="com.yangmj.entity.OrderDetails" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="wechat_openid" property="wechatOpenid" jdbcType="VARCHAR" />
     <result column="is_active" property="isActive" jdbcType="VARCHAR" />
@@ -33,7 +33,7 @@
     delete from order_details
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insertOrderDetails" parameterType="xin.yangmj.entity.OrderDetails" >
+  <insert id="insertOrderDetails" parameterType="com.yangmj.entity.OrderDetails" >
     insert into order_details (id, wechat_openid, is_active, 
       create_time, update_time, project_fee, 
       order_id, contact_dir, is_captain
@@ -43,7 +43,7 @@
       #{orderId,jdbcType=INTEGER}, #{contactDir,jdbcType=VARCHAR}, #{isCaptain,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="xin.yangmj.entity.OrderDetails" >
+  <insert id="insertSelective" parameterType="com.yangmj.entity.OrderDetails" >
     insert into order_details
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -104,7 +104,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="xin.yangmj.entity.OrderDetails" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yangmj.entity.OrderDetails" >
     update order_details
     <set >
       <if test="wechatOpenid != null" >
@@ -134,7 +134,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="xin.yangmj.entity.OrderDetails" >
+  <update id="updateByPrimaryKey" parameterType="com.yangmj.entity.OrderDetails" >
     update order_details
     set wechat_openid = #{wechatOpenid,jdbcType=VARCHAR},
       is_active = #{isActive,jdbcType=VARCHAR},
