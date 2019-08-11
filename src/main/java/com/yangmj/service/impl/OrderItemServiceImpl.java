@@ -1,6 +1,7 @@
 package com.yangmj.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.yangmj.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -11,6 +12,7 @@ import com.yangmj.mapper.OrderDetailsMapper;
 import com.yangmj.mapper.OrderItemMapper;
 import com.yangmj.service.OrderItemService;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +37,18 @@ public class OrderItemServiceImpl implements OrderItemService {
                 //通过订单表的id获取这个id对应的总数量 计算总数的为long的需要转为int型
                 Number numCount = (Number)hashMap.get(orderItemquery.getId());
                 orderItemquery.setCurrNum(numCount.intValue());
+                //设置比赛时间页面可识别
+                String actureStartTm = orderItemquery.getActureStartTm();
+                String endTime = orderItemquery.getEndTime();
+
+                String sStartDate = actureStartTm.substring(5, 10);
+                String sStartTime = actureStartTm.substring(11, 16);
+
+                String sEndDate = endTime.substring(5, 10);
+                String sEndTime = endTime.substring(11, 16);
+                orderItemquery.setActureStartTm(sStartDate.replace("-","/")+" "+sStartTime+"-"+sEndTime);
+
+
             }
         }
         MyPageInfo<OrderItem> orderItemPageInfo = new MyPageInfo<>(orderItemList);

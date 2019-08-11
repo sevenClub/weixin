@@ -22,11 +22,12 @@
     <result column="description" property="description" jdbcType="VARCHAR" />
     <result column="contact_dir" property="contactDir" jdbcType="VARCHAR" />
     <result column="start_wechat_openid" property="startWechatOpenid" jdbcType="VARCHAR" />
+    <result column="sport_img_url" property="sportImgUrl" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, project_id, curr_Num, total_Num, is_full, game_status, end_price, game_location, 
     order_status, create_time, update_time, acture_start_tm, end_time, sport_title, project_cost, 
-    fee_tags, activity_hour, description, contact_dir, start_wechat_openid
+    fee_tags, activity_hour, description, contact_dir, start_wechat_openid, sport_img_url
   </sql>
   <select id="queryOrderItemAll" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select

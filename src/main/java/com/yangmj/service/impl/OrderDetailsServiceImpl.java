@@ -90,4 +90,9 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
     public int verifyRepeatedPartIn(Integer orderId, String wechatOpenid) {
         return orderDetailsMapper.verifyRepeatedPartIn(orderId, wechatOpenid);
     }
+
+    @Override
+    public List<Map> viewDetailsOneOrder(Integer id) {
+        return orderDetailsMapper.viewDetailsOneOrder(id);
+    }
 }

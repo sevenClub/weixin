@@ -14,7 +14,12 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.security.PublicKey;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class OrderDetailsController {
@@ -96,6 +101,16 @@ public class OrderDetailsController {
             resp = ResponseResult.makeFailResponse(SystemDefault.NETWORK_ERROR, "");
         }
 
+        return resp;
+    }
+
+    @RequestMapping("/viewDetailsOneOrder")
+    public ResponseResult viewDetailsOneOrder(@RequestBody OrderItem orderItem) {
+        ResponseResult resp = null;
+        List<Map> orderItems = orderDetailsService.viewDetailsOneOrder(orderItem.getId());
+        System.out.println(orderItem.toString());
+
+        resp = ResponseResult.makeSuccResponse(null, orderItems);
         return resp;
     }
 }
