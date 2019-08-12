@@ -1,19 +1,22 @@
 package com.yangmj.service.impl;
 
 import com.github.pagehelper.PageHelper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import com.yangmj.common.MyPageInfo;
 import com.yangmj.entity.OrderDetails;
 import com.yangmj.entity.OrderItem;
 import com.yangmj.mapper.OrderDetailsMapper;
 import com.yangmj.mapper.OrderItemMapper;
 import com.yangmj.service.OrderDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class OrderDetailsServiceImpl implements OrderDetailsService {
@@ -100,31 +103,50 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
         List<Map> mapList = orderDetailsMapper.viewDetailsOneOrder(id);
 
         Map<String, Object> hashMap = new HashMap<>();
+        ArrayList<Object> peopleInfo = new ArrayList<>();
+
 
         if (!CollectionUtils.isEmpty(mapList)) {
             hashMap = mapList.get(0);
-//            String  phones = null;
-//            String  avatarUrls = null;
-//            Map queryMap = mapList.get(i);
-            List<String> avatars = new ArrayList<>(16);
-            List<String> phones = new ArrayList<>(16);
-            mapList.stream()
-                    .forEach(item -> {
-                        avatars.add((String) item.get("avatarUrl"));
-                        phones.add((String)item.get("phone"));
-                    });
-            StringJoiner avatarJoiner = new StringJoiner(",");
-            avatars.stream().forEach(a -> avatarJoiner.add(a));
-            StringJoiner phoneJoiner = new StringJoiner(",");
-            phones.stream().forEach(p -> phoneJoiner.add(p));
+           //人的联系方式做为一个字段的list集合传输出去
             for (int i = 0; i <mapList.size() ; i++) {
+                HashMap<Object, Object> infoMap = new HashMap<>();
+                Map queryMap = mapList.get(i);
+                String avatarUrl = (String)queryMap.get("avatarUrl");
+                Long phone = Long.valueOf((String) queryMap.get("phone"));
+                String nickName = (String)queryMap.get("nickName");
+                String openId = (String)queryMap.get("openId");
+                //是否为队长
+                String isCaptain = (String) queryMap.get("isCaptain");
 
-                if (mapList.size()-1 == i) {
-                    //hashMap = mapList.get(0);
-                    hashMap.put("phone", phones);
-                    hashMap.put("avatarUrl", avatars);
-                }
+                infoMap.put("avatarUrl", avatarUrl);
+                infoMap.put("phone",phone );
+                infoMap.put("nickName",nickName );
+                infoMap.put("openId",openId );
+                //0是 1否
+                infoMap.put("isCaptain",isCaptain );
+                peopleInfo.add(infoMap);
             }
+            //关于金额的信息返回是否AA 还是免费
+            String feeTags = (String)hashMap.get("feeTags");
+            if ("AA".equals(feeTags)) {
+                Object cost = hashMap.get("projectCost");
+                Double projectCost = Double.parseDouble(cost.toString());
+                Double perCost = projectCost / mapList.size();
+                System.out.println(perCost);
+                hashMap.put("feeTags", perCost);
+            }
+            //页面不展示这些字段
+            hashMap.remove("phone");
+            hashMap.remove("avatarUrl");
+            hashMap.remove("nickName");
+            hashMap.remove("openId");
+            hashMap.remove("isCaptain");
+//            hashMap.remove("totalNum");
+            //页面新增字段 当前人数
+            hashMap.put("currNum", mapList.size());
+            //判断当前队伍的是否满员了
+            hashMap.put("peopleInfo", peopleInfo);
         }
 
         return hashMap;

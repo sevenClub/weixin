@@ -1,10 +1,9 @@
 package com.yangmj.mapper;
 
-import com.yangmj.entity.OrderItem;
+import com.yangmj.entity.OrderDetails;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import com.yangmj.entity.OrderDetails;
 
 import java.util.List;
 import java.util.Map;
@@ -54,7 +53,7 @@ public interface OrderDetailsMapper {
      * @param id
      * @return
      */
-    @Select("SELECT item.id,item.sport_title sportTitle,item.fee_tags feeTags,item.acture_start_tm actureStartTm,item.game_location gameLocation,cu.avatar_url avatarUrl,item.description,cu.phone,item.sport_img_url sportImgUrl from order_item item ,order_details detail,consumer cu where item.id = detail.order_id and detail.wechat_openid = cu.wechat_openid and item.id =#{id}")
+    @Select("SELECT item.id,item.sport_title sportTitle,item.fee_tags feeTags,item.acture_start_tm actureStartTm,item.game_location gameLocation,cu.avatar_url avatarUrl,item.description,cu.phone,item.sport_img_url sportImgUrl,cu.nickname nickName,item.total_Num totalNum,cu.wechat_openid openId,item.project_cost projectCost,detail.is_captain isCaptain,item.is_full isFull from order_item item ,order_details detail,consumer cu where item.id = detail.order_id and detail.wechat_openid = cu.wechat_openid and detail.is_active ='0' and item.id =#{id}")
     List<Map> viewDetailsOneOrder(@Param("id") Integer id);
 
 }

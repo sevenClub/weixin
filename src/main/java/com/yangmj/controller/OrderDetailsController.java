@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.PublicKey;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -104,6 +102,11 @@ public class OrderDetailsController {
         return resp;
     }
 
+    /**
+     * 查看订单详情
+     * @param orderItem
+     * @return
+     */
     @RequestMapping("/viewDetailsOneOrder")
     public ResponseResult viewDetailsOneOrder(@RequestBody OrderItem orderItem) {
         ResponseResult resp = null;
