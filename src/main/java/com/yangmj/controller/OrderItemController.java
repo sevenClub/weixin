@@ -8,6 +8,7 @@ import com.yangmj.entity.OrderDetails;
 import com.yangmj.entity.OrderItem;
 import com.yangmj.service.OrderDetailsService;
 import com.yangmj.service.OrderItemService;
+import com.yangmj.service.ProjectItemService;
 import com.yangmj.util.CommonUtils;
 import com.yangmj.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,10 @@ public class OrderItemController {
 
     @Autowired
     private OrderDetailsService orderDetailsService;
+    @Autowired
+    private ProjectItemService projectItemService;
 
+    //详情页面的图片的信息
     @Value("${login.url}")
     private  String loginUrl;
 
@@ -93,7 +97,7 @@ public class OrderItemController {
          */
         if (!StringUtils.isEmpty(costRMB)) {
             if ("01".equals(costRMB)) {
-//                OO 免费 AA
+//                OO: 免费 AA:AA制
                 orderItem.setFeeTags("AA");
             } else if ("02".equals(costRMB)) {
                 orderItem.setProjectCost(new BigDecimal(0));
@@ -181,9 +185,8 @@ public class OrderItemController {
                 //0满员 1 未满员
                 orderItem.setIsFull("1");
             }
-            System.out.println(loginUrl);
             //创建订单的时候给定该订单的图片url
-            for (int i = 1; i <= 10 ; i++) {
+            /*for (int i = 1; i <= 10 ; i++) {
                 //其他给默认的图片
                 if ("99".equals(orderItem.getProjectId())) {
                     orderItem.setSportImgUrl(loginUrl+"other.jpg");
@@ -194,7 +197,7 @@ public class OrderItemController {
                     orderItem.setSportImgUrl(loginUrl+i+".jpg");
                     break;
                 }
-            }
+            }*/
             //TODO 创建订单的时候需要判断当前时间点是否冲突,待讨论定义
             int item = orderItemService.insertOrderItem(orderItem);
             //订单创建的时候，需要将发起人的信息插入到order_details订单明细表
@@ -229,7 +232,7 @@ public class OrderItemController {
         MyPageInfo<OrderItem> queryOrderItemAll = orderItemService.queryOrderItemAll(orderItem);
         OrderItem orderItemBean = queryOrderItemAll.getList().get(0);
 //        0满员 1 未满员
-        orderItemBean.setIsFull("1");
+        orderItemBean.setIsFull("0");
 //        0 组队中 1 待参加 2： 正常结束 3：时间到组队失败 4：发起者人为取消订单）
         orderItemBean.setOrderStatus("1");
 //        按钮显示是否可以玩，不管人数满员否，0开始游戏，1还在招募人员

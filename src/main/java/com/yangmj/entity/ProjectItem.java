@@ -29,6 +29,25 @@ public class ProjectItem extends BaseEntity {
     private String openTime;
 
     private String sportActiveTm;
+    //详情页的图片
+    private String sportImgUrl;
+    //订单列表的图片小图片
+    private String firstPageUrl;
+    public String getSportImgUrl() {
+        return sportImgUrl;
+    }
+
+    public void setSportImgUrl(String sportImgUrl) {
+        this.sportImgUrl = sportImgUrl;
+    }
+
+    public String getFirstPageUrl() {
+        return firstPageUrl;
+    }
+
+    public void setFirstPageUrl(String firstPageUrl) {
+        this.firstPageUrl = firstPageUrl;
+    }
 
     public Integer getId() {
         return id;

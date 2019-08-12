@@ -23,3 +23,4 @@ server:
 #配置文件的位置信息
 login:
     url: https://coder.newlandfinance.com:9999/images/
+    pageUrl: https://coder.newlandfinance.com:9999/images/small/

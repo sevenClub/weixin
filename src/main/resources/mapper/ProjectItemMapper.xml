@@ -14,6 +14,8 @@
     <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
     <result column="open_time" property="openTime" jdbcType="VARCHAR" />
     <result column="sport_active_tm" property="sportActiveTm" jdbcType="VARCHAR" />
+    <result column="sport_img_url" property="sportImgUrl" jdbcType="VARCHAR" />
+    <result column="first_page_url" property="sportImgUrl" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, project_id, project_name, total_Num, project_cost, discount, end_price, game_location, 

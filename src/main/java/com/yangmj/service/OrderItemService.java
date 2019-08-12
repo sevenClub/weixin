@@ -11,6 +11,8 @@ public interface OrderItemService {
 
     MyPageInfo<OrderItem> queryOrderItemAll(OrderItem orderItem);
 
+//    MyPageInfo<OrderItem> queryOrderItemAll1(OrderItem orderItem);
+
     int insertOrderItem(OrderItem record);
 
     /**

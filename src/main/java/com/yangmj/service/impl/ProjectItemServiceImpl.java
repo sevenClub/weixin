@@ -12,6 +12,7 @@ import com.yangmj.util.DateUtil;
 import com.yangmj.util.RandomUtil;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProjectItemServiceImpl implements ProjectItemService {
@@ -54,5 +55,10 @@ public class ProjectItemServiceImpl implements ProjectItemService {
     @Override
     public ProjectItem queryProjectByKey(ProjectItem record) {
         return projectItemMapper.queryProjectByKey(record);
+    }
+
+    @Override
+    public List<Map> queryAllProjectUrl() {
+        return projectItemMapper.queryAllProjectUrl();
     }
 }

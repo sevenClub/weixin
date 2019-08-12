@@ -109,6 +109,7 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
         if (!CollectionUtils.isEmpty(mapList)) {
             hashMap = mapList.get(0);
            //人的联系方式做为一个字段的list集合传输出去
+            String captainOpenId = null;
             for (int i = 0; i <mapList.size() ; i++) {
                 HashMap<Object, Object> infoMap = new HashMap<>();
                 Map queryMap = mapList.get(i);
@@ -119,6 +120,10 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
                 //是否为队长
                 String isCaptain = (String) queryMap.get("isCaptain");
 
+                //如果是队长，将队长的openid单独发出去
+                if ("0".equals(isCaptain)) {
+                    captainOpenId = openId;
+                }
                 infoMap.put("avatarUrl", avatarUrl);
                 infoMap.put("phone",phone );
                 infoMap.put("nickName",nickName );
@@ -145,6 +150,8 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
 //            hashMap.remove("totalNum");
             //页面新增字段 当前人数
             hashMap.put("currNum", mapList.size());
+            //将队长的openid单独发出去，作为页面判断
+            hashMap.put("captainOpenId", captainOpenId);
             //判断当前队伍的是否满员了
             hashMap.put("peopleInfo", peopleInfo);
         }
