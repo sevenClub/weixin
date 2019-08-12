@@ -2,11 +2,7 @@ package com.yangmj.service;
 
 import com.yangmj.common.MyPageInfo;
 import com.yangmj.entity.OrderDetails;
-import com.yangmj.entity.OrderItem;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 
-import java.util.List;
 import java.util.Map;
 
 public interface OrderDetailsService {
@@ -22,7 +18,7 @@ public interface OrderDetailsService {
      */
     int verifyRepeatedPartIn(Integer orderId,String wechatOpenid);
 
-    List<Map> viewDetailsOneOrder(Integer id);
+    Map<String, Object> viewDetailsOneOrder(Integer id);
 
 
 

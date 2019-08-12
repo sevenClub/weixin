@@ -1,6 +1,7 @@
 package com.yangmj.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.yangmj.common.SystemDefault;
 import com.yangmj.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,8 +36,11 @@ public class OrderItemServiceImpl implements OrderItemService {
             for (int i = 0; i < orderItemList.size(); i++) {
                 OrderItem orderItemquery = orderItemList.get(i);
                 //通过订单表的id获取这个id对应的总数量 计算总数的为long的需要转为int型
+                System.out.println("查询的订单idorderItemquery.getId()"+orderItemquery.getId());
                 Number numCount = (Number)hashMap.get(orderItemquery.getId());
-                orderItemquery.setCurrNum(numCount.intValue());
+                if (null != numCount) {
+                    orderItemquery.setCurrNum(numCount.intValue());
+                }
                 //设置比赛时间页面可识别
                 String actureStartTm = orderItemquery.getActureStartTm();
                 String endTime = orderItemquery.getEndTime();
@@ -48,7 +52,13 @@ public class OrderItemServiceImpl implements OrderItemService {
                 String sEndTime = endTime.substring(11, 16);
                 orderItemquery.setActureStartTm(sStartDate.replace("-","/")+" "+sStartTime+"-"+sEndTime);
 
-
+                //订单的aa和免费
+                String feeTags = orderItemquery.getFeeTags();
+                if ("AA".equals(feeTags)) {
+                    orderItemquery.setFeeTags(SystemDefault.PAY_AA);
+                } else {
+                    orderItemquery.setFeeTags(SystemDefault.PAY_OO);
+                }
             }
         }
         MyPageInfo<OrderItem> orderItemPageInfo = new MyPageInfo<>(orderItemList);
@@ -67,7 +77,7 @@ public class OrderItemServiceImpl implements OrderItemService {
         if ("2".equals(orderStatus)) {
             orderStatus = "'2','3','4'";
         }
-        int j = 1 / 0;
+//        int j = 1 / 0;
         List<OrderItem> orderItemList = orderItemMapper.queryLeaderOrFollower(isCaptain, orderStatus,wechatOpenid);
 
         List<Map> listNumCount = orderDetailsMapper.selectConversationList();

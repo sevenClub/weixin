@@ -107,10 +107,10 @@ public class OrderDetailsController {
     @RequestMapping("/viewDetailsOneOrder")
     public ResponseResult viewDetailsOneOrder(@RequestBody OrderItem orderItem) {
         ResponseResult resp = null;
-        List<Map> orderItems = orderDetailsService.viewDetailsOneOrder(orderItem.getId());
+        Map<String, Object> stringObjectMap = orderDetailsService.viewDetailsOneOrder(orderItem.getId());
         System.out.println(orderItem.toString());
 
-        resp = ResponseResult.makeSuccResponse(null, orderItems);
+        resp = ResponseResult.makeSuccResponse(null, stringObjectMap);
         return resp;
     }
 }

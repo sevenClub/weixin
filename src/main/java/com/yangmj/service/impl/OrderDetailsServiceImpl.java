@@ -13,8 +13,7 @@ import com.yangmj.mapper.OrderItemMapper;
 import com.yangmj.service.OrderDetailsService;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class OrderDetailsServiceImpl implements OrderDetailsService {
@@ -91,8 +90,43 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
         return orderDetailsMapper.verifyRepeatedPartIn(orderId, wechatOpenid);
     }
 
+    /**
+     * 查看详情
+     * @param id
+     * @return
+     */
     @Override
-    public List<Map> viewDetailsOneOrder(Integer id) {
-        return orderDetailsMapper.viewDetailsOneOrder(id);
+    public Map<String, Object> viewDetailsOneOrder(Integer id) {
+        List<Map> mapList = orderDetailsMapper.viewDetailsOneOrder(id);
+
+        Map<String, Object> hashMap = new HashMap<>();
+
+        if (!CollectionUtils.isEmpty(mapList)) {
+            hashMap = mapList.get(0);
+//            String  phones = null;
+//            String  avatarUrls = null;
+//            Map queryMap = mapList.get(i);
+            List<String> avatars = new ArrayList<>(16);
+            List<String> phones = new ArrayList<>(16);
+            mapList.stream()
+                    .forEach(item -> {
+                        avatars.add((String) item.get("avatarUrl"));
+                        phones.add((String)item.get("phone"));
+                    });
+            StringJoiner avatarJoiner = new StringJoiner(",");
+            avatars.stream().forEach(a -> avatarJoiner.add(a));
+            StringJoiner phoneJoiner = new StringJoiner(",");
+            phones.stream().forEach(p -> phoneJoiner.add(p));
+            for (int i = 0; i <mapList.size() ; i++) {
+
+                if (mapList.size()-1 == i) {
+                    //hashMap = mapList.get(0);
+                    hashMap.put("phone", phones);
+                    hashMap.put("avatarUrl", avatars);
+                }
+            }
+        }
+
+        return hashMap;
     }
 }

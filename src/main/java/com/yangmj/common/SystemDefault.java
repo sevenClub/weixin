@@ -10,6 +10,8 @@ public class SystemDefault {
     public static String MOBILE_ERROR = "请填写正确手机号码";
     public static String MOBILE_MISSING = "请填写手机号码";
     public static String NOTICE_FRIENDLY = "你已经在该活动中了，无需重复参加哟";
+    public static String PAY_AA = "自费";
+    public static String PAY_OO = "免费";
 
     // 0 在线  1 退出拼单
     public static String IS_ACTIVE_ONLINE_0 = "0";

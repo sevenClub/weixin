@@ -54,7 +54,7 @@ public interface OrderDetailsMapper {
      * @param id
      * @return
      */
-    @Select("SELECT item.id,item.sport_title,item.fee_tags,item.acture_start_tm,item.game_location,cu.avatar_url,item.description,item.contact_dir from order_item item ,order_details detail,consumer cu where item.id = detail.order_id and detail.wechat_openid = cu.wechat_openid and item.id =#{id}")
+    @Select("SELECT item.id,item.sport_title sportTitle,item.fee_tags feeTags,item.acture_start_tm actureStartTm,item.game_location gameLocation,cu.avatar_url avatarUrl,item.description,cu.phone,item.sport_img_url sportImgUrl from order_item item ,order_details detail,consumer cu where item.id = detail.order_id and detail.wechat_openid = cu.wechat_openid and item.id =#{id}")
     List<Map> viewDetailsOneOrder(@Param("id") Integer id);
 
 }
