@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.yangmj.common.CommonQuery;
 import com.yangmj.common.MyPageInfo;
 import com.yangmj.common.SystemDefault;
+import com.yangmj.entity.OrderDetails;
 import com.yangmj.entity.OrderItem;
 import com.yangmj.mapper.OrderDetailsMapper;
 import com.yangmj.mapper.OrderItemMapper;
@@ -36,6 +37,7 @@ public class OrderItemServiceImpl implements OrderItemService {
         List<OrderItem> orderItemList = orderItemMapper.queryOrderItemAll(orderItem);
         //订单信息返回页面包含该订单目前的人数
         List<Map> listNumCount = orderDetailsMapper.selectConversationList();
+        List<OrderDetails> joinedOpenidMaps = orderDetailsMapper.queryJoinedOpenid();
         HashMap<Object, Object> hashMap = CommonQuery.setCurrentNum(listNumCount);
         if(!CollectionUtils.isEmpty(orderItemList)){
             //订单信息不是空的时候，获取该订单的url,订单的地址
@@ -49,17 +51,6 @@ public class OrderItemServiceImpl implements OrderItemService {
                 if (null != numCount) {
                     orderItemquery.setCurrNum(numCount.intValue());
                 }
-                //设置比赛时间页面可识别
-//                String actureStartTm = orderItemquery.getActureStartTm();
-//                String endTime = orderItemquery.getEndTime();
-//
-//                String sStartDate = actureStartTm.substring(5, 10);
-//                String sStartTime = actureStartTm.substring(11, 16);
-//
-//                String sEndDate = endTime.substring(5, 10);
-//                String sEndTime = endTime.substring(11, 16);
-//                orderItemquery.setActureStartTm(sStartDate.replace("-","/")+" "+sStartTime+"-"+sEndTime);
-
                 //订单的aa和免费
                 String feeTags = orderItemquery.getFeeTags();
                 if ("AA".equals(feeTags)) {
@@ -72,14 +63,18 @@ public class OrderItemServiceImpl implements OrderItemService {
                 //设置图片的地址
                 orderItemquery.setSportImgUrl(orderItemquery.getFirstPageUrl());
                 //判断当前登录人是否参加订单了，details的id
-                String wechatOpenid = orderItemquery.getWechatOpenid();
+//                String wechatOpenid = orderItemquery.getWechatOpenid();
                 //当前登录人的传递过来的id
-               /* String startWechatOpenid = orderItem.getStartWechatOpenid();
-                if (wechatOpenid.equals(startWechatOpenid)) {
-                    orderItemquery.setJoined(true);
-                } else {
-                    orderItemquery.setJoined(false);
-                }*/
+                String startWechatOpenid = orderItem.getStartWechatOpenid();
+                for (int j = 0; j <joinedOpenidMaps.size() ; j++) {
+                    OrderDetails orderDetails = joinedOpenidMaps.get(j);
+                    String detailOpenid = orderDetails.getWechatOpenid();
+                    if (startWechatOpenid.equals(detailOpenid)) {
+                        orderItemquery.setJoined(true);
+                    } else {
+                        orderItemquery.setJoined(false);
+                    }
+                }
             }
         }
         MyPageInfo<OrderItem> orderItemPageInfo = new MyPageInfo<>(orderItemList);
