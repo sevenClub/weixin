@@ -45,6 +45,26 @@ public class OrderItem extends BaseEntity {
     private String description;
 
     private String contactDir;
+    //查询出id，是用户的details的
+    private String wechatOpenid;
+
+    private boolean joined;
+
+    public boolean isJoined() {
+        return joined;
+    }
+
+    public void setJoined(boolean joined) {
+        this.joined = joined;
+    }
+
+    public String getWechatOpenid() {
+        return wechatOpenid;
+    }
+
+    public void setWechatOpenid(String wechatOpenid) {
+        this.wechatOpenid = wechatOpenid;
+    }
 
     public String getPerCost() {
         return perCost;

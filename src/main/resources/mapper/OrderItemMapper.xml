@@ -24,6 +24,7 @@
     <result column="start_wechat_openid" property="startWechatOpenid" jdbcType="VARCHAR" />
     <result column="sport_img_url" property="sportImgUrl" jdbcType="VARCHAR" />
     <result column="first_page_url" property="firstPageUrl" jdbcType="VARCHAR" />
+    <result column="wechat_openid" property="wechatOpenid" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, project_id, curr_Num, total_Num, is_full, game_status, end_price, game_location, 
@@ -67,6 +68,7 @@
       </if>
       AND item.order_status in ('1','0') and UNIX_TIMESTAMP(item.acture_start_tm)> UNIX_TIMESTAMP(NOW())
       AND project.project_id = item.project_id
+--       AND detail.order_id = item.id
     </where>
     order by item.create_time desc
   </select>

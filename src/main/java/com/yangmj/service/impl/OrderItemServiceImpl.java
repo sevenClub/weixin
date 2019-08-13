@@ -50,15 +50,15 @@ public class OrderItemServiceImpl implements OrderItemService {
                     orderItemquery.setCurrNum(numCount.intValue());
                 }
                 //设置比赛时间页面可识别
-                String actureStartTm = orderItemquery.getActureStartTm();
-                String endTime = orderItemquery.getEndTime();
-
-                String sStartDate = actureStartTm.substring(5, 10);
-                String sStartTime = actureStartTm.substring(11, 16);
-
-                String sEndDate = endTime.substring(5, 10);
-                String sEndTime = endTime.substring(11, 16);
-                orderItemquery.setActureStartTm(sStartDate.replace("-","/")+" "+sStartTime+"-"+sEndTime);
+//                String actureStartTm = orderItemquery.getActureStartTm();
+//                String endTime = orderItemquery.getEndTime();
+//
+//                String sStartDate = actureStartTm.substring(5, 10);
+//                String sStartTime = actureStartTm.substring(11, 16);
+//
+//                String sEndDate = endTime.substring(5, 10);
+//                String sEndTime = endTime.substring(11, 16);
+//                orderItemquery.setActureStartTm(sStartDate.replace("-","/")+" "+sStartTime+"-"+sEndTime);
 
                 //订单的aa和免费
                 String feeTags = orderItemquery.getFeeTags();
@@ -69,7 +69,17 @@ public class OrderItemServiceImpl implements OrderItemService {
                     orderItemquery.setFeeTags(SystemDefault.PAY_OO);
                     orderItemquery.setPerCost(SystemDefault.PAY_OO);
                 }
+                //设置图片的地址
                 orderItemquery.setSportImgUrl(orderItemquery.getFirstPageUrl());
+                //判断当前登录人是否参加订单了，details的id
+                String wechatOpenid = orderItemquery.getWechatOpenid();
+                //当前登录人的传递过来的id
+               /* String startWechatOpenid = orderItem.getStartWechatOpenid();
+                if (wechatOpenid.equals(startWechatOpenid)) {
+                    orderItemquery.setJoined(true);
+                } else {
+                    orderItemquery.setJoined(false);
+                }*/
             }
         }
         MyPageInfo<OrderItem> orderItemPageInfo = new MyPageInfo<>(orderItemList);
