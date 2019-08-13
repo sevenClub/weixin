@@ -57,7 +57,6 @@ public class OrderItemController {
      */
     @PostMapping("/findAllOrders")
     public ResponseResult queryOrderItemAll(@RequestBody OrderItem orderItem) {
-
         //运动类型
         String sportType = orderItem.getSportType();
         //人数范围
@@ -79,7 +78,7 @@ public class OrderItemController {
             02 5-8人
             03 8-10人
             04 10人以上
-            all 所有人
+            05 所有人
          */
         //根据人数筛选
         if (!StringUtils.isEmpty(numType)) {
@@ -129,11 +128,11 @@ public class OrderItemController {
             }
         }
         //根据日期筛选,转换时间的格式
-        if (!StringUtils.isEmpty(queryDate)) {
-//            yyyy/mm/dd to yyyy-mm-dd
-            String yyyyToYYYY = DateUtil.yyyyToYYYY(queryDate);
-            orderItem.setActureStartTm(yyyyToYYYY);
-        }
+//        if (!StringUtils.isEmpty(queryDate)) {
+////            yyyy/mm/dd to yyyy-mm-dd
+//            String yyyyToYYYY = DateUtil.yyyyToYYYY(queryDate);
+//            orderItem.setActureStartTm(yyyyToYYYY);
+//        }
         MyPageInfo<OrderItem> projectItemPageInfo = orderItemService.queryOrderItemAll(orderItem);
         ResponseResult resp = ResponseResult.makeSuccResponse(null, projectItemPageInfo);
         return resp;
@@ -150,6 +149,8 @@ public class OrderItemController {
             log.info("参数缺失，请稍后再试");
             return resp = ResponseResult.makeFailResponse(SystemDefault.SERVER_ERROR_500, "");
         }
+        //isCaptain 0我发起的 1 我参加的
+        //orderStatus 0 组队中 1 待参加 2 已结束
         String isCaptain = jsonObject.get("isCaptain").toString();
         String orderStatus = jsonObject.get("orderStatus").toString();
         String wechatOpenid = jsonObject.get("wechatOpenid").toString();
@@ -208,7 +209,9 @@ public class OrderItemController {
             //创建订单如果是AA的，设置每个人的花费
             String feeTags = orderItem.getFeeTags();
             if ("AA".equals(feeTags)) {
+                System.out.println("totalNum***"+totalNum);
                 BigDecimal projectCost = orderItem.getProjectCost();
+                System.out.println("projectCost***"+projectCost);
                 BigDecimal perCost = projectCost.divide(new BigDecimal(totalNum));
                 orderItem.setEndPrice(perCost);
             } else {
@@ -245,7 +248,7 @@ public class OrderItemController {
      */
     @PostMapping("/tmpStartGame")
     public ResponseResult tmpStartGame(@RequestBody OrderItem orderItem) {
-//        安全性需要自己从表或者然后更新
+//        安全需要自己从表或者然后更新
         MyPageInfo<OrderItem> queryOrderItemAll = orderItemService.queryOrderItemAll(orderItem);
         OrderItem orderItemBean = queryOrderItemAll.getList().get(0);
 //        0满员 1 未满员

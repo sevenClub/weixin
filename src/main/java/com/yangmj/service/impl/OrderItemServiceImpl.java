@@ -64,24 +64,12 @@ public class OrderItemServiceImpl implements OrderItemService {
                 String feeTags = orderItemquery.getFeeTags();
                 if ("AA".equals(feeTags)) {
                     orderItemquery.setFeeTags(SystemDefault.PAY_AA);
+                    orderItemquery.setPerCost(orderItemquery.getEndPrice()+"/人");
                 } else {
                     orderItemquery.setFeeTags(SystemDefault.PAY_OO);
+                    orderItemquery.setPerCost(SystemDefault.PAY_OO);
                 }
-                //将图片的url返回到页面 后期优化
-//                if (!CollectionUtils.isEmpty(mapUrls)) {
-//
-//                }
-                for (int j = 1; j <=9 ; j++) {
-                    if ((j + "").equals(orderItemquery.getProjectId())) {
-                        orderItemquery.setSportImgUrl(loginPageUrl + j + ".jpg");
-                        break;
-                    } else {
-                        orderItemquery.setSportImgUrl(loginPageUrl +"other.jpg");
-                        break;
-                    }
-                }
-//                CommonUtils commonUtils = new CommonUtils();
-//                orderItemquery = commonUtils.imagesUrl(orderItemquery);
+                orderItemquery.setSportImgUrl(orderItemquery.getFirstPageUrl());
             }
         }
         MyPageInfo<OrderItem> orderItemPageInfo = new MyPageInfo<>(orderItemList);
@@ -111,6 +99,13 @@ public class OrderItemServiceImpl implements OrderItemService {
                 //通过订单表的id获取这个id对应的总数量 计算总数的为long的需要转为int型
                 Number numCount = (Number)hashMap.get(orderItemquery.getId());
                 orderItemquery.setCurrNum(numCount.intValue());
+                //页面返回字段
+                String feeTags = orderItemquery.getFeeTags();
+                if ("AA".equals(feeTags)) {
+                    orderItemquery.setPerCost(orderItemquery.getEndPrice() + "/人");
+                } else {
+                    orderItemquery.setPerCost(SystemDefault.PAY_OO);
+                }
             }
         }
         return orderItemList;

@@ -46,10 +46,30 @@ public class OrderItem extends BaseEntity {
 
     private String contactDir;
 
+    public String getPerCost() {
+        return perCost;
+    }
+
+    public void setPerCost(String perCost) {
+        this.perCost = perCost;
+    }
+
+    private String perCost;
+
+
+    public String getFirstPageUrl() {
+        return firstPageUrl;
+    }
+
+    public void setFirstPageUrl(String firstPageUrl) {
+        this.firstPageUrl = firstPageUrl;
+    }
+
     private String startWechatOpenid;
 
     private String sportImgUrl;
     private String sportType;
+    private String firstPageUrl;
 
     public String getSportType() {
         return sportType;

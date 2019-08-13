@@ -2,6 +2,7 @@ package com.yangmj.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.yangmj.common.MyPageInfo;
+import com.yangmj.common.SystemDefault;
 import com.yangmj.entity.OrderDetails;
 import com.yangmj.entity.OrderItem;
 import com.yangmj.mapper.OrderDetailsMapper;
@@ -136,7 +137,9 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
             String feeTags = (String)hashMap.get("feeTags");
             if ("AA".equals(feeTags)) {
                 Object perCost = hashMap.get("perCost");
-                hashMap.put("perCost", perCost);
+                hashMap.put("perCost", perCost + "/人");
+            } else {
+                hashMap.put("perCost", SystemDefault.PAY_OO);
             }
             //页面不展示这些字段
             hashMap.remove("phone");

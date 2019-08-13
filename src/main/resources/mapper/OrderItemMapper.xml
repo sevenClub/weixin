@@ -23,6 +23,7 @@
     <result column="contact_dir" property="contactDir" jdbcType="VARCHAR" />
     <result column="start_wechat_openid" property="startWechatOpenid" jdbcType="VARCHAR" />
     <result column="sport_img_url" property="sportImgUrl" jdbcType="VARCHAR" />
+    <result column="first_page_url" property="firstPageUrl" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, project_id, curr_Num, total_Num, is_full, game_status, end_price, game_location, 
@@ -30,43 +31,44 @@
     fee_tags, activity_hour, description, contact_dir, start_wechat_openid, sport_img_url
   </sql>
   <select id="queryOrderItemAll" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from order_item
-    <where>
+    select item.*,project.first_page_url
+   <!-- <include refid="Base_Column_List" />-->
+    from order_item item,project_item project
+      <where>
       <if test="id != null and id != ''"  >
-        AND id = #{id,jdbcType=INTEGER}
+        AND item.id = #{id,jdbcType=INTEGER}
       </if>
       <if test="projectId != null and projectId != ''"  >
-        AND project_id = #{projectId}
+        AND item.project_id = #{projectId}
       </if>
       <if test="totalNum != null and totalNum != ''"  >
-        <![CDATA[ AND total_Num > #{totalNum}]]>
+        <![CDATA[ AND item.total_Num > #{totalNum}]]>
       </if>
       <if test="totalNumUp != null and totalNumUp != ''"  >
-        <![CDATA[ AND  total_Num <= #{totalNumUp}]]>
+        <![CDATA[ AND  item.total_Num <= #{totalNumUp}]]>
       </if>
       <if test="projectCost != null and projectCost != ''"  >
-        <![CDATA[ AND end_price > #{projectCost}]]>
+        <![CDATA[ AND item.end_price > #{projectCost}]]>
       </if>
       <if test="endPrice != null and endPrice != ''"  >
-        <![CDATA[ AND  end_price <= #{endPrice}]]>
+        <![CDATA[ AND  item.end_price <= #{endPrice}]]>
       </if>
       <if test="actureStartTm != null and actureStartTm != ''"  >
-        <![CDATA[ AND acture_start_tm >= #{actureStartTm}]]>
+        <![CDATA[ AND item.acture_start_tm >= #{actureStartTm}]]>
       </if>
       <if test="endTime != null and endTime != ''"  >
-        <![CDATA[ AND  end_time <= #{endTime}]]>
+        <![CDATA[ AND  item.end_time <= #{endTime}]]>
       </if>
       <if test="feeTags != null and feeTags != ''"  >
-        <![CDATA[ AND  fee_tags = #{feeTags}]]>
+        <![CDATA[ AND  item.fee_tags = #{feeTags}]]>
       </if>
       <if test="actureStartTm != null and actureStartTm != ''"  >
-        AND acture_start_tm like #{actureStartTm}"%"
+        AND item.acture_start_tm like #{actureStartTm}"%"
       </if>
-      AND order_status in ('1','0') and UNIX_TIMESTAMP(acture_start_tm)> UNIX_TIMESTAMP(NOW())
+      AND item.order_status in ('1','0') and UNIX_TIMESTAMP(item.acture_start_tm)> UNIX_TIMESTAMP(NOW())
+      AND project.project_id = item.project_id
     </where>
-    order by create_time desc
+    order by item.create_time desc
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from order_item
