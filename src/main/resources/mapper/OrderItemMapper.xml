@@ -47,10 +47,10 @@
         <![CDATA[ AND  total_Num <= #{totalNumUp}]]>
       </if>
       <if test="projectCost != null and projectCost != ''"  >
-        <![CDATA[ AND project_cost > #{projectCost}]]>
+        <![CDATA[ AND end_price > #{projectCost}]]>
       </if>
       <if test="endPrice != null and endPrice != ''"  >
-        <![CDATA[ AND  project_cost <= #{endPrice}]]>
+        <![CDATA[ AND  end_price <= #{endPrice}]]>
       </if>
       <if test="actureStartTm != null and actureStartTm != ''"  >
         <![CDATA[ AND acture_start_tm >= #{actureStartTm}]]>
@@ -64,7 +64,7 @@
       <if test="actureStartTm != null and actureStartTm != ''"  >
         AND acture_start_tm like #{actureStartTm}"%"
       </if>
-      order_status in ('1','0') and UNIX_TIMESTAMP(acture_start_tm)> UNIX_TIMESTAMP(NOW())
+      AND order_status in ('1','0') and UNIX_TIMESTAMP(acture_start_tm)> UNIX_TIMESTAMP(NOW())
     </where>
     order by create_time desc
   </select>

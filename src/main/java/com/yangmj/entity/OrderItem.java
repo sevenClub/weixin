@@ -49,8 +49,15 @@ public class OrderItem extends BaseEntity {
     private String startWechatOpenid;
 
     private String sportImgUrl;
+    private String sportType;
 
+    public String getSportType() {
+        return sportType;
+    }
 
+    public void setSportType(String sportType) {
+        this.sportType = sportType;
+    }
 
     //新增字段，不映射到数据库
     @Transient

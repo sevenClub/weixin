@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.CollectionUtils;
@@ -56,17 +57,31 @@ public class OrderItemController {
      */
     @PostMapping("/findAllOrders")
     public ResponseResult queryOrderItemAll(@RequestBody OrderItem orderItem) {
-        /*
+
+        //运动类型
+        String sportType = orderItem.getSportType();
+        //人数范围
+        String numType = orderItem.getNumType();
+        //金额范围
+        String costRMB = orderItem.getCostRMB();
+        //时间范围
+        String queryDate = orderItem.getQueryDate();
+        //根据类型筛选
+        if (!StringUtils.isEmpty(sportType)) {
+            if ("all".equals(sportType)) {
+                orderItem.setProjectId("");
+            } else {
+                orderItem.setProjectId(sportType);
+            }
+        }
+         /*
             01 5人以下
             02 5-8人
             03 8-10人
             04 10人以上
+            all 所有人
          */
-
         //根据人数筛选
-        String numType = orderItem.getNumType();
-        String costRMB = orderItem.getCostRMB();
-        String queryDate = orderItem.getQueryDate();
         if (!StringUtils.isEmpty(numType)) {
             Integer num = Integer.valueOf(numType);
             switch (num) {
@@ -82,10 +97,11 @@ public class OrderItemController {
                     orderItem.setTotalNum(8);
                     orderItem.setTotalNumUp(10);
                     break;
-                default:
+                case 4:
                     orderItem.setTotalNum(10);
                     break;
-//                orderItem.setTotalNumUp(5);
+                default:
+                    break;
             }
         }
         /*
@@ -94,6 +110,7 @@ public class OrderItemController {
             02 人均50以内
             03 人均50-100
             04 人均100以上
+            all 所有
          */
         if (!StringUtils.isEmpty(costRMB)) {
             if ("01".equals(costRMB)) {
@@ -105,8 +122,10 @@ public class OrderItemController {
             } else if ("03".equals(costRMB)) {
                 orderItem.setProjectCost(new BigDecimal(50));
                 orderItem.setEndPrice(new BigDecimal(100));
-            } else {
+            } else if ("04".equals(costRMB)) {
                 orderItem.setProjectCost(new BigDecimal(100));
+            } else {
+                //查询所有的
             }
         }
         //根据日期筛选,转换时间的格式
@@ -185,20 +204,16 @@ public class OrderItemController {
                 //0满员 1 未满员
                 orderItem.setIsFull("1");
             }
-            //创建订单的时候给定该订单的图片url
-            /*for (int i = 1; i <= 10 ; i++) {
-                //其他给默认的图片
-                if ("99".equals(orderItem.getProjectId())) {
-                    orderItem.setSportImgUrl(loginUrl+"other.jpg");
-                    break;
-                }
-                //常用项目的分类
-                if ((i + "").equals(orderItem.getProjectId())) {
-                    orderItem.setSportImgUrl(loginUrl+i+".jpg");
-                    break;
-                }
-            }*/
             //TODO 创建订单的时候需要判断当前时间点是否冲突,待讨论定义
+            //创建订单如果是AA的，设置每个人的花费
+            String feeTags = orderItem.getFeeTags();
+            if ("AA".equals(feeTags)) {
+                BigDecimal projectCost = orderItem.getProjectCost();
+                BigDecimal perCost = projectCost.divide(new BigDecimal(totalNum));
+                orderItem.setEndPrice(perCost);
+            } else {
+                orderItem.setEndPrice(new BigDecimal(0));
+            }
             int item = orderItemService.insertOrderItem(orderItem);
             //订单创建的时候，需要将发起人的信息插入到order_details订单明细表
             orderDetails.setOrderId(orderItem.getId());
@@ -284,7 +299,7 @@ public class OrderItemController {
      */
     //@PostMapping("/timerCloseOrder") //页面测试
     //定时任务时间的
-//    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "* 0/15 * * * ?")
     public void timerCloseOrderNoFull() {
         List<OrderItem> orderItemList = orderItemService.timerCloseOrder();
         HashMap<Object, Object> hashMap = new HashMap<>();
@@ -304,7 +319,7 @@ public class OrderItemController {
      * 订单时间到了最后的时间，该订单进行关闭
      */
 //    @PostMapping("/timerCloseOrderNormalEnd")
-//    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "* 0/15 * * * ?")
     public void timerCloseOrderNormalEnd() {
         List<OrderItem> orderItemList = orderItemService.timerCloseOrderNormalEnd();
         HashMap<Object, Object> hashMap = new HashMap<>();

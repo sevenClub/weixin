@@ -135,11 +135,8 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
             //关于金额的信息返回是否AA 还是免费
             String feeTags = (String)hashMap.get("feeTags");
             if ("AA".equals(feeTags)) {
-                Object cost = hashMap.get("projectCost");
-                Double projectCost = Double.parseDouble(cost.toString());
-                Double perCost = projectCost / mapList.size();
-                System.out.println(perCost);
-                hashMap.put("feeTags", perCost);
+                Object perCost = hashMap.get("perCost");
+                hashMap.put("perCost", perCost);
             }
             //页面不展示这些字段
             hashMap.remove("phone");
