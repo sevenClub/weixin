@@ -71,7 +71,7 @@ public class OrderItemController {
             Integer num = Integer.valueOf(numType);
             switch (num) {
                 case 1:
-                    orderItem.setTotalNum(1);
+                    orderItem.setTotalNum(0);
                     orderItem.setTotalNumUp(5);
                     break;
                 case 2:
@@ -208,6 +208,8 @@ public class OrderItemController {
             orderDetails.setProjectFee(orderItem.getProjectCost());
             //0是 1否 发起人
             orderDetails.setIsCaptain("0");
+            //手机号
+            orderDetails.setContactDir(phone);
             String details = orderDetailsService.insertOrderDetails(orderDetails);
             resp = ResponseResult.makeSuccResponse(null, item);
         } catch (Exception e) {

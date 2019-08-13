@@ -80,6 +80,8 @@ public class OrderDetailsController {
         orderDetails.setProjectFee(orderItem.getProjectCost());
         //0是 1否 发起人 第一个发起人为是，后面通过本端口都是1
         orderDetails.setIsCaptain(SystemDefault.IS_CAPTAIN_NO);
+        //手机号
+        orderDetails.setContactDir(phone);
 
         try {
             String details = orderDetailsService.insertOrderDetails(orderDetails);

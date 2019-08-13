@@ -80,6 +80,8 @@ public class OrderItemServiceImpl implements OrderItemService {
                         break;
                     }
                 }
+//                CommonUtils commonUtils = new CommonUtils();
+//                orderItemquery = commonUtils.imagesUrl(orderItemquery);
             }
         }
         MyPageInfo<OrderItem> orderItemPageInfo = new MyPageInfo<>(orderItemList);

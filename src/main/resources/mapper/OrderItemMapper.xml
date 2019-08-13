@@ -41,16 +41,16 @@
         AND project_id = #{projectId}
       </if>
       <if test="totalNum != null and totalNum != ''"  >
-        <![CDATA[ AND total_Num >= #{totalNum}]]>
+        <![CDATA[ AND total_Num > #{totalNum}]]>
       </if>
       <if test="totalNumUp != null and totalNumUp != ''"  >
-        <![CDATA[ AND  total_Num < #{totalNumUp}]]>
+        <![CDATA[ AND  total_Num <= #{totalNumUp}]]>
       </if>
       <if test="projectCost != null and projectCost != ''"  >
-        <![CDATA[ AND project_cost >= #{projectCost}]]>
+        <![CDATA[ AND project_cost > #{projectCost}]]>
       </if>
       <if test="endPrice != null and endPrice != ''"  >
-        <![CDATA[ AND  project_cost < #{endPrice}]]>
+        <![CDATA[ AND  project_cost <= #{endPrice}]]>
       </if>
       <if test="actureStartTm != null and actureStartTm != ''"  >
         <![CDATA[ AND acture_start_tm >= #{actureStartTm}]]>
@@ -64,7 +64,9 @@
       <if test="actureStartTm != null and actureStartTm != ''"  >
         AND acture_start_tm like #{actureStartTm}"%"
       </if>
+      order_status in ('1','0') and UNIX_TIMESTAMP(acture_start_tm)> UNIX_TIMESTAMP(NOW())
     </where>
+    order by create_time desc
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from order_item

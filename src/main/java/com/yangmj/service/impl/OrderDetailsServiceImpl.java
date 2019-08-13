@@ -114,7 +114,7 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
                 HashMap<Object, Object> infoMap = new HashMap<>();
                 Map queryMap = mapList.get(i);
                 String avatarUrl = (String)queryMap.get("avatarUrl");
-                Long phone = Long.valueOf((String) queryMap.get("phone"));
+                String phone = (String) queryMap.get("phone");
                 String nickName = (String)queryMap.get("nickName");
                 String openId = (String)queryMap.get("openId");
                 //是否为队长

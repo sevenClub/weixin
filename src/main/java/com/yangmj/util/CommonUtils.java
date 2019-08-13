@@ -1,11 +1,15 @@
 package com.yangmj.util;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CommonUtils {
+
+    @Value("${login.pageUrl}")
+    private  String loginPageUrl;
 
     public static String checkPhone(String phone) {
         String resp = "00";
@@ -35,6 +39,20 @@ public class CommonUtils {
         b = m.matches();
         return b;
     }
+
+//    public OrderItem imagesUrl(OrderItem orderItemquery) {
+//        for (int j = 1; j <=9 ; j++) {
+//            if ((j + "").equals(orderItemquery.getProjectId())) {
+//                orderItemquery.setSportImgUrl(loginPageUrl + j + ".jpg");
+//                break;
+//            } else {
+//                orderItemquery.setSportImgUrl(loginPageUrl +"other.jpg");
+//                break;
+//            }
+//        }
+//        return orderItemquery;
+//    }
+
 
 
 }
