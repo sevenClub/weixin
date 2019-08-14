@@ -56,6 +56,6 @@ public interface OrderItemMapper {
     /**
      * 订单时间到了最后的时间，该订单进行关闭,正常游戏结束的订单
      */
-    @Select("select * from order_item item where item.is_full in('1','0') and item.order_status in('1','3','4') and UNIX_TIMESTAMP(item.end_time)<UNIX_TIMESTAMP(now())")
+    @Select("select * from order_item item where item.is_full in('1','0') and item.order_status in('1') and UNIX_TIMESTAMP(item.end_time)<UNIX_TIMESTAMP(now())")
     List<OrderItem> timerCloseOrderNormalEnd();
 }

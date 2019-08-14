@@ -63,9 +63,9 @@
       <if test="endTime != null and endTime != ''"  >
         <![CDATA[ AND  item.end_time <= #{endTime}]]>
       </if>-->
-      <if test="feeTags != null and feeTags != ''"  >
+      <!--<if test="feeTags != null and feeTags != ''"  >
         <![CDATA[ AND  item.fee_tags = #{feeTags}]]>
-      </if>
+      </if>-->
       <if test="actureStartTm != null and actureStartTm != ''"  >
         AND item.acture_start_tm like #{actureStartTm}"%"
       </if>
@@ -328,8 +328,9 @@
     update order_item
     <set >
       <if test="status != null and status != ''" >
-        order_status = #{status},
+        order_status = #{_parameter.status},
       </if>
+        is_full = '0',
       update_time = now()
     </set>
     where id in (

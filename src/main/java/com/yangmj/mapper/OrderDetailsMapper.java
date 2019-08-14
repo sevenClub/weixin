@@ -54,7 +54,7 @@ public interface OrderDetailsMapper {
      * @param id
      * @return
      */
-    @Select("SELECT item.id,item.sport_title sportTitle,item.fee_tags feeTags,item.acture_start_tm actureStartTm,item.game_location gameLocation,cu.avatar_url avatarUrl,item.description,detail.contact_dir phone,project.sport_img_url sportImgUrl,cu.nickname nickName,item.total_Num totalNum,cu.wechat_openid openId,item.project_cost projectCost,item.end_price perCost,detail.is_captain isCaptain,item.is_full isFull from order_item item ,order_details detail,consumer cu,project_item project where item.id = detail.order_id and detail.wechat_openid = cu.wechat_openid and detail.is_active ='0' and project.project_id = item.project_id and item.id =#{id}")
+    @Select("SELECT item.id,item.sport_title sportTitle,item.fee_tags feeTags,item.acture_start_tm actureStartTm,item.game_location gameLocation,cu.avatar_url avatarUrl,item.description,detail.contact_dir phone,project.sport_img_url sportImgUrl,cu.nickname nickName,item.total_Num totalNum,cu.wechat_openid openId,item.project_cost projectCost,item.end_price perCost,detail.is_captain isCaptain,item.is_full isFull,item.order_status orderStatus,item.end_time endTime from order_item item ,order_details detail,consumer cu,project_item project where item.id = detail.order_id and detail.wechat_openid = cu.wechat_openid and detail.is_active ='0' and project.project_id = item.project_id and item.id =#{id}")
     List<Map> viewDetailsOneOrder(@Param("id") Integer id);
 
     @Select("SELECT detail.order_id orderId,detail.wechat_openid openid from order_item item ,order_details detail where item.id = detail.order_id and item.order_status in ('1','0') and UNIX_TIMESTAMP(item.acture_start_tm)> UNIX_TIMESTAMP(NOW()) order by item.id desc")
