@@ -26,8 +26,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static java.math.BigDecimal.ROUND_HALF_DOWN;
 
 @RestController
 @Slf4j
@@ -114,10 +117,11 @@ public class OrderItemController {
         if (!StringUtils.isEmpty(costRMB)) {
             if ("01".equals(costRMB)) {
 //                OO: 免费 AA:AA制
-                orderItem.setFeeTags("AA");
+                orderItem.setFeeTags("OO");
             } else if ("02".equals(costRMB)) {
                 orderItem.setProjectCost(new BigDecimal(0));
                 orderItem.setEndPrice(new BigDecimal(50));
+                orderItem.setFeeTags("AA");
             } else if ("03".equals(costRMB)) {
                 orderItem.setProjectCost(new BigDecimal(50));
                 orderItem.setEndPrice(new BigDecimal(100));
@@ -127,12 +131,7 @@ public class OrderItemController {
                 //查询所有的
             }
         }
-        //根据日期筛选,转换时间的格式
-//        if (!StringUtils.isEmpty(queryDate)) {
-////            yyyy/mm/dd to yyyy-mm-dd
-//            String yyyyToYYYY = DateUtil.yyyyToYYYY(queryDate);
-//            orderItem.setActureStartTm(yyyyToYYYY);
-//        }
+        orderItem.setActureStartTm(queryDate);
         MyPageInfo<OrderItem> projectItemPageInfo = orderItemService.queryOrderItemAll(orderItem);
         ResponseResult resp = ResponseResult.makeSuccResponse(null, projectItemPageInfo);
         return resp;
@@ -154,9 +153,27 @@ public class OrderItemController {
         String isCaptain = jsonObject.get("isCaptain").toString();
         String orderStatus = jsonObject.get("orderStatus").toString();
         String wechatOpenid = jsonObject.get("wechatOpenid").toString();
+        //查看已经结束的的，包含2： 正常结束 3：时间到组队失败 4：发起者人为取消订单
+        ArrayList<Object> list = new ArrayList<>();
+        HashMap<Object, Object> hashMap = new HashMap<>();
+        if ("0".equals(orderStatus)) {
+            list.add("0");
+        }
+        if ("1".equals(orderStatus)) {
+            list.add("1");
+        }
+        if ("2".equals(orderStatus)) {
+            list.add("2");
+            list.add("3");
+            list.add("4");
+        }
+        hashMap.put("isCaptain", isCaptain);
+        hashMap.put("orderStatus", list);
+        hashMap.put("wechatOpenid", wechatOpenid);
 
         try {
-            List<OrderItem> orderItems = orderItemService.queryLeaderOrFollower(isCaptain, orderStatus, wechatOpenid);
+            List<OrderItem> orderItems = orderItemService.queryLeaderOrFollower(hashMap);
+//            List<OrderItem> orderItems = orderItemService.queryLeaderOrFollower(isCaptain, orderStatus, wechatOpenid);
             resp = ResponseResult.makeSuccResponse(null, orderItems);
         } catch (Exception e) {
             e.printStackTrace();
@@ -212,7 +229,7 @@ public class OrderItemController {
                 System.out.println("totalNum***"+totalNum);
                 BigDecimal projectCost = orderItem.getProjectCost();
                 System.out.println("projectCost***"+projectCost);
-                BigDecimal perCost = projectCost.divide(new BigDecimal(totalNum));
+                BigDecimal perCost = projectCost.divide(new BigDecimal(totalNum),2,ROUND_HALF_DOWN);
                 orderItem.setEndPrice(perCost);
             } else {
                 orderItem.setEndPrice(new BigDecimal(0));
@@ -249,8 +266,9 @@ public class OrderItemController {
     @PostMapping("/tmpStartGame")
     public ResponseResult tmpStartGame(@RequestBody OrderItem orderItem) {
 //        安全需要自己从表或者然后更新
-        MyPageInfo<OrderItem> queryOrderItemAll = orderItemService.queryOrderItemAll(orderItem);
-        OrderItem orderItemBean = queryOrderItemAll.getList().get(0);
+//        MyPageInfo<OrderItem> queryOrderItemAll = orderItemService.queryOrderItemAll(orderItem);
+        OrderItem orderItemBean = orderItemService.queryOrderItemByKey(orderItem);
+//        OrderItem orderItemBean = queryOrderItemAll.getList().get(0);
 //        0满员 1 未满员
         orderItemBean.setIsFull("0");
 //        0 组队中 1 待参加 2： 正常结束 3：时间到组队失败 4：发起者人为取消订单）
@@ -302,7 +320,7 @@ public class OrderItemController {
      */
     //@PostMapping("/timerCloseOrder") //页面测试
     //定时任务时间的
-    @Scheduled(cron = "* 0/15 * * * ?")
+    @Scheduled(cron = "*/30 * * * * ?")
     public void timerCloseOrderNoFull() {
         List<OrderItem> orderItemList = orderItemService.timerCloseOrder();
         HashMap<Object, Object> hashMap = new HashMap<>();
@@ -322,7 +340,7 @@ public class OrderItemController {
      * 订单时间到了最后的时间，该订单进行关闭
      */
 //    @PostMapping("/timerCloseOrderNormalEnd")
-    @Scheduled(cron = "* 0/15 * * * ?")
+    @Scheduled(cron = "*/30 * * * * ?")
     public void timerCloseOrderNormalEnd() {
         List<OrderItem> orderItemList = orderItemService.timerCloseOrderNormalEnd();
         HashMap<Object, Object> hashMap = new HashMap<>();

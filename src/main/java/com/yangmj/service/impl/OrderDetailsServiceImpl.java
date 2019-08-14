@@ -137,7 +137,7 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
             String feeTags = (String)hashMap.get("feeTags");
             if ("AA".equals(feeTags)) {
                 Object perCost = hashMap.get("perCost");
-                hashMap.put("perCost", perCost + "/人");
+                hashMap.put("perCost", SystemDefault.AMOUNT_SYMBOL+perCost);
             } else {
                 hashMap.put("perCost", SystemDefault.PAY_OO);
             }

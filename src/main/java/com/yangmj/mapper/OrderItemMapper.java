@@ -15,6 +15,9 @@ public interface OrderItemMapper {
     int insertOrderItem(OrderItem record);
 
     int insertSelective(OrderItem record);
+    //根据id更新记录
+    OrderItem queryOrderItemByKey(OrderItem record);
+
 
     List<OrderItem> queryOrderItemAll(OrderItem orderItem);
 
@@ -30,9 +33,9 @@ public interface OrderItemMapper {
 //    @Select("select *,count(*) as count from message WHERE toid = #{userId} GROUP BY formid ORDER BY created_date desc limit #{offset}, #{limit}")
 //    List<Message> selectConversationList(@Param("userId") String userId, @Param("offset") int offset, @Param("limit") int limit);
 
-    @Select("select item.id,item.sport_title,item.curr_Num,item.total_Num,item.acture_start_tm,item.game_location,project.first_page_url sport_img_url,item.end_price endPrice ,item.fee_tags feeTags from order_item item ,order_details detail,project_item project where item.id = detail.order_id and detail.is_captain =#{isCaptain}" +
-            " and item.order_status in (#{orderStatus}) and detail.wechat_openid =#{wechatOpenid} and detail.is_active ='0' and project.project_id = item.project_id order by item.create_time desc")
-    List<OrderItem> queryLeaderOrFollower(@Param("isCaptain") String isCaptain, @Param("orderStatus") String orderStatus, @Param("wechatOpenid") String wechatOpenid);
+//    @Select("select item.id,item.sport_title,item.curr_Num,item.total_Num,item.acture_start_tm,item.game_location,project.first_page_url sport_img_url,item.end_price endPrice ,item.fee_tags feeTags from order_item item ,order_details detail,project_item project where item.id = detail.order_id and detail.is_captain =#{isCaptain}" +
+//            " and item.order_status in (#{orderStatus}) and detail.wechat_openid =#{wechatOpenid} and detail.is_active ='0' and project.project_id = item.project_id order by item.create_time desc")
+    List<OrderItem> queryLeaderOrFollower(HashMap hashMapparam);
 
     /**
      * 订单的取消
@@ -53,6 +56,6 @@ public interface OrderItemMapper {
     /**
      * 订单时间到了最后的时间，该订单进行关闭,正常游戏结束的订单
      */
-    @Select("select * from order_item item where item.is_full in('1','0') and item.order_status ='1' and UNIX_TIMESTAMP(item.end_time)<UNIX_TIMESTAMP(now())")
+    @Select("select * from order_item item where item.is_full in('1','0') and item.order_status in('1','3','4') and UNIX_TIMESTAMP(item.end_time)<UNIX_TIMESTAMP(now())")
     List<OrderItem> timerCloseOrderNormalEnd();
 }

@@ -12,6 +12,7 @@ public class SystemDefault {
     public static String NOTICE_FRIENDLY = "你已经在该活动中了，无需重复参加哟";
     public static String PAY_AA = "自费";
     public static String PAY_OO = "免费";
+    public static String AMOUNT_SYMBOL = "￥";
 
     // 0 在线  1 退出拼单
     public static String IS_ACTIVE_ONLINE_0 = "0";

@@ -42,6 +42,9 @@
       <if test="projectId != null and projectId != ''"  >
         AND item.project_id = #{projectId}
       </if>
+      <if test="feeTags != null and feeTags != ''"  >
+        AND item.fee_tags = #{feeTags}
+      </if>
       <if test="totalNum != null and totalNum != ''"  >
         <![CDATA[ AND item.total_Num > #{totalNum}]]>
       </if>
@@ -54,12 +57,12 @@
       <if test="endPrice != null and endPrice != ''"  >
         <![CDATA[ AND  item.end_price <= #{endPrice}]]>
       </if>
-      <if test="actureStartTm != null and actureStartTm != ''"  >
+     <!-- <if test="actureStartTm != null and actureStartTm != ''"  >
         <![CDATA[ AND item.acture_start_tm >= #{actureStartTm}]]>
       </if>
       <if test="endTime != null and endTime != ''"  >
         <![CDATA[ AND  item.end_time <= #{endTime}]]>
-      </if>
+      </if>-->
       <if test="feeTags != null and feeTags != ''"  >
         <![CDATA[ AND  item.fee_tags = #{feeTags}]]>
       </if>
@@ -68,7 +71,6 @@
       </if>
       AND item.order_status in ('1','0') and UNIX_TIMESTAMP(item.acture_start_tm)> UNIX_TIMESTAMP(NOW())
       AND project.project_id = item.project_id
---       AND detail.order_id = item.id
     </where>
     order by item.create_time desc
   </select>
@@ -336,4 +338,36 @@
     </foreach>
     )
   </update>
+
+  <select id="queryLeaderOrFollower" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select item.id,item.sport_title,item.curr_Num,item.total_Num,item.acture_start_tm,item.end_time,
+        item.game_location,project.first_page_url sport_img_url,item.end_price endPrice ,item.fee_tags feeTags
+    from order_item item,order_details detail,project_item project
+    <where>
+      and item.id = detail.order_id
+      and detail.is_captain =#{_parameter.isCaptain}
+      and item.order_status in (
+      <foreach collection="orderStatus" item="status" index="index" separator=",">
+        #{status}
+      </foreach>
+      )
+      and detail.wechat_openid =#{_parameter.wechatOpenid}
+      and detail.is_active ='0'
+      and project.project_id = item.project_id
+    </where>
+    order by item.create_time desc
+  </select>
+
+
+  <select id="queryOrderItemByKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from order_item
+    <where>
+      <if test="id != null and id != ''"  >
+        AND id = #{id,jdbcType=INTEGER}
+      </if>
+    </where>
+  </select>
+
 </mapper>

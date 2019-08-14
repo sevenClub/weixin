@@ -4,7 +4,6 @@ import com.github.pagehelper.PageHelper;
 import com.yangmj.common.CommonQuery;
 import com.yangmj.common.MyPageInfo;
 import com.yangmj.common.SystemDefault;
-import com.yangmj.entity.OrderDetails;
 import com.yangmj.entity.OrderItem;
 import com.yangmj.mapper.OrderDetailsMapper;
 import com.yangmj.mapper.OrderItemMapper;
@@ -14,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +37,7 @@ public class OrderItemServiceImpl implements OrderItemService {
         List<OrderItem> orderItemList = orderItemMapper.queryOrderItemAll(orderItem);
         //订单信息返回页面包含该订单目前的人数
         List<Map> listNumCount = orderDetailsMapper.selectConversationList();
-        List<OrderDetails> joinedOpenidMaps = orderDetailsMapper.queryJoinedOpenid();
+
         HashMap<Object, Object> hashMap = CommonQuery.setCurrentNum(listNumCount);
         if(!CollectionUtils.isEmpty(orderItemList)){
             //订单信息不是空的时候，获取该订单的url,订单的地址
@@ -45,6 +45,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 //            List<Map> mapUrls = projectItemMapper.queryAllProjectUrl();
             for (int i = 0; i < orderItemList.size(); i++) {
                 OrderItem orderItemquery = orderItemList.get(i);
+
                 //通过订单表的id获取这个id对应的总数量 计算总数的为long的需要转为int型
                 System.out.println("查询的订单idorderItemquery.getId()"+orderItemquery.getId());
                 Number numCount = (Number)hashMap.get(orderItemquery.getId());
@@ -55,7 +56,7 @@ public class OrderItemServiceImpl implements OrderItemService {
                 String feeTags = orderItemquery.getFeeTags();
                 if ("AA".equals(feeTags)) {
                     orderItemquery.setFeeTags(SystemDefault.PAY_AA);
-                    orderItemquery.setPerCost(orderItemquery.getEndPrice()+"/人");
+                    orderItemquery.setPerCost(SystemDefault.AMOUNT_SYMBOL+orderItemquery.getEndPrice());
                 } else {
                     orderItemquery.setFeeTags(SystemDefault.PAY_OO);
                     orderItemquery.setPerCost(SystemDefault.PAY_OO);
@@ -66,14 +67,13 @@ public class OrderItemServiceImpl implements OrderItemService {
 //                String wechatOpenid = orderItemquery.getWechatOpenid();
                 //当前登录人的传递过来的id
                 String startWechatOpenid = orderItem.getStartWechatOpenid();
-                for (int j = 0; j <joinedOpenidMaps.size() ; j++) {
-                    OrderDetails orderDetails = joinedOpenidMaps.get(j);
-                    String detailOpenid = orderDetails.getWechatOpenid();
-                    if (startWechatOpenid.equals(detailOpenid)) {
-                        orderItemquery.setJoined(true);
-                    } else {
-                        orderItemquery.setJoined(false);
-                    }
+                //循环当前的订单id
+                Integer itemqueryId = orderItemquery.getId();
+                int joindNum = orderDetailsMapper.verifyRepeatedPartIn(itemqueryId, startWechatOpenid);
+                if (joindNum > 0) {
+                    orderItemquery.setJoined(true);
+                } else {
+                    orderItemquery.setJoined(false);
                 }
             }
         }
@@ -87,14 +87,10 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    public List<OrderItem> queryLeaderOrFollower(String isCaptain, String orderStatus,String wechatOpenid) {
+    public List<OrderItem> queryLeaderOrFollower(HashMap hashMapparam) {
 
-        //查看已经结束的的，包含2： 正常结束 3：时间到组队失败 4：发起者人为取消订单
-        if ("2".equals(orderStatus)) {
-            orderStatus = "'2','3','4'";
-        }
-//        int j = 1 / 0;
-        List<OrderItem> orderItemList = orderItemMapper.queryLeaderOrFollower(isCaptain, orderStatus,wechatOpenid);
+
+        List<OrderItem> orderItemList = orderItemMapper.queryLeaderOrFollower(hashMapparam);
 
         List<Map> listNumCount = orderDetailsMapper.selectConversationList();
         HashMap<Object, Object> hashMap = CommonQuery.setCurrentNum(listNumCount);
@@ -102,12 +98,17 @@ public class OrderItemServiceImpl implements OrderItemService {
             for (int i = 0; i < orderItemList.size(); i++) {
                 OrderItem orderItemquery = orderItemList.get(i);
                 //通过订单表的id获取这个id对应的总数量 计算总数的为long的需要转为int型
-                Number numCount = (Number)hashMap.get(orderItemquery.getId());
-                orderItemquery.setCurrNum(numCount.intValue());
+                if (hashMap.size()>0) {
+                    Number numCount = (Number)hashMap.get(orderItemquery.getId());
+                    if (!StringUtils.isEmpty(numCount)) {
+                        orderItemquery.setCurrNum(numCount.intValue());
+                    }
+
+                }
                 //页面返回字段
                 String feeTags = orderItemquery.getFeeTags();
                 if ("AA".equals(feeTags)) {
-                    orderItemquery.setPerCost(orderItemquery.getEndPrice() + "/人");
+                    orderItemquery.setPerCost(SystemDefault.AMOUNT_SYMBOL+orderItemquery.getEndPrice());
                 } else {
                     orderItemquery.setPerCost(SystemDefault.PAY_OO);
                 }
@@ -146,5 +147,10 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Override
     public List<OrderItem> timerCloseOrderNormalEnd() {
         return orderItemMapper.timerCloseOrderNormalEnd();
+    }
+
+    @Override
+    public OrderItem queryOrderItemByKey(OrderItem record) {
+        return orderItemMapper.queryOrderItemByKey(record);
     }
 }

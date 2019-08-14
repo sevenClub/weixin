@@ -17,11 +17,11 @@ public interface OrderItemService {
 
     /**
      * 查询订单的发起者或参与者，目前的订单状态
-     * @param isCaptain
-     * @param orderStatus
+     * @param hashMap
+     * @param
      * @return
      */
-    List<OrderItem> queryLeaderOrFollower(String isCaptain,String orderStatus,String wechatOpenid);
+    List<OrderItem> queryLeaderOrFollower(HashMap hashMap);
 
     int updateOrderItemByKey(OrderItem record);
 
@@ -41,4 +41,7 @@ public interface OrderItemService {
      * 订单时间到了最后的时间，该订单进行关闭,正常游戏结束的订单
      */
     List<OrderItem> timerCloseOrderNormalEnd();
+
+    //根据id更新记录
+    OrderItem queryOrderItemByKey(OrderItem record);
 }
