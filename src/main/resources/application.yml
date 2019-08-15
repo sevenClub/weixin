@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: sit
+    active: dev
 logging:
   level:
-    root: info
+    root: debug

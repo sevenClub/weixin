@@ -60,51 +60,44 @@ public class OrderItemController {
      */
     @PostMapping("/findAllOrders")
     public ResponseResult queryOrderItemAll(@RequestBody OrderItem orderItem) {
+        //获取组合的条件筛选，默认全部传空
+        HashMap sort = orderItem.getSort();
         //运动类型
-        String sportType = orderItem.getSportType();
+        String sportType = (String)sort.get("sportType");
         //人数范围
-        String numType = orderItem.getNumType();
+        String numType = (String)sort.get("numType");
         //金额范围
-        String costRMB = orderItem.getCostRMB();
+        String costRMB = (String)sort.get("costRMB");
         //时间范围
-        String queryDate = orderItem.getQueryDate();
+        String queryDate = (String)sort.get("queryDate");
         //根据类型筛选
-        if (!StringUtils.isEmpty(sportType)) {
-            if ("all".equals(sportType)) {
-                orderItem.setProjectId("");
-            } else {
-                orderItem.setProjectId(sportType);
-            }
+        if (StringUtils.isEmpty(sportType)) {
+            orderItem.setProjectId("");
+        }else {
+            orderItem.setProjectId(sportType);
         }
-         /*
+         /*根据人数筛选
             01 5人以下
             02 5-8人
             03 8-10人
             04 10人以上
-            05 所有人
+            all 所有人,传递空参数
          */
-        //根据人数筛选
         if (!StringUtils.isEmpty(numType)) {
-            Integer num = Integer.valueOf(numType);
-            switch (num) {
-                case 1:
-                    orderItem.setTotalNum(0);
-                    orderItem.setTotalNumUp(5);
-                    break;
-                case 2:
-                    orderItem.setTotalNum(5);
-                    orderItem.setTotalNumUp(8);
-                    break;
-                case 3:
-                    orderItem.setTotalNum(8);
-                    orderItem.setTotalNumUp(10);
-                    break;
-                case 4:
-                    orderItem.setTotalNum(10);
-                    break;
-                default:
-                    break;
+            if ("01".equals(numType)) {
+                orderItem.setTotalNum(0);
+                orderItem.setTotalNumUp(5);
+            }else if("02".equals(numType)) {
+                orderItem.setTotalNum(5);
+                orderItem.setTotalNumUp(8);
+            }else if("03".equals(numType)) {
+                orderItem.setTotalNum(8);
+                orderItem.setTotalNumUp(10);
+            }else{
+                orderItem.setTotalNum(10);
             }
+        }else {
+
         }
         /*
             根据订单总金额筛选
@@ -127,11 +120,14 @@ public class OrderItemController {
                 orderItem.setEndPrice(new BigDecimal(100));
             } else if ("04".equals(costRMB)) {
                 orderItem.setProjectCost(new BigDecimal(100));
-            } else {
-                //查询所有的
             }
+        }else {
+            //查询所有的
         }
-        orderItem.setActureStartTm(queryDate);
+        //根据时间筛选
+        if (!StringUtils.isEmpty(queryDate)) {
+            orderItem.setActureStartTm(queryDate);
+        }
         MyPageInfo<OrderItem> projectItemPageInfo = orderItemService.queryOrderItemAll(orderItem);
         ResponseResult resp = ResponseResult.makeSuccResponse(null, projectItemPageInfo);
         return resp;
@@ -153,6 +149,8 @@ public class OrderItemController {
         String isCaptain = jsonObject.get("isCaptain").toString();
         String orderStatus = jsonObject.get("orderStatus").toString();
         String wechatOpenid = jsonObject.get("wechatOpenid").toString();
+        Integer pageSize =(Integer) jsonObject.get("pageSize");
+        Integer pageNum = (Integer)jsonObject.get("pageNum");
         //查看已经结束的的，包含2： 正常结束 3：时间到组队失败 4：发起者人为取消订单
         ArrayList<Object> list = new ArrayList<>();
         HashMap<Object, Object> hashMap = new HashMap<>();
@@ -170,11 +168,13 @@ public class OrderItemController {
         hashMap.put("isCaptain", isCaptain);
         hashMap.put("orderStatus", list);
         hashMap.put("wechatOpenid", wechatOpenid);
+        hashMap.put("pageNum", pageNum);
+        hashMap.put("pageSize", pageSize);
 
         try {
-            List<OrderItem> orderItems = orderItemService.queryLeaderOrFollower(hashMap);
+            MyPageInfo<OrderItem> orderItemMyPageInfo = orderItemService.queryLeaderOrFollower(hashMap);
 //            List<OrderItem> orderItems = orderItemService.queryLeaderOrFollower(isCaptain, orderStatus, wechatOpenid);
-            resp = ResponseResult.makeSuccResponse(null, orderItems);
+            resp = ResponseResult.makeSuccResponse(null, orderItemMyPageInfo);
         } catch (Exception e) {
             e.printStackTrace();
             log.error("查询失败queryLeaderOrFollower，原因"+e.toString());

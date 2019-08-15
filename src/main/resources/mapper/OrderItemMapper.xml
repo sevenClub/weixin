@@ -57,22 +57,13 @@
       <if test="endPrice != null and endPrice != ''"  >
         <![CDATA[ AND  item.end_price <= #{endPrice}]]>
       </if>
-     <!-- <if test="actureStartTm != null and actureStartTm != ''"  >
-        <![CDATA[ AND item.acture_start_tm >= #{actureStartTm}]]>
-      </if>
-      <if test="endTime != null and endTime != ''"  >
-        <![CDATA[ AND  item.end_time <= #{endTime}]]>
-      </if>-->
-      <!--<if test="feeTags != null and feeTags != ''"  >
-        <![CDATA[ AND  item.fee_tags = #{feeTags}]]>
-      </if>-->
       <if test="actureStartTm != null and actureStartTm != ''"  >
         AND item.acture_start_tm like #{actureStartTm}"%"
       </if>
       AND item.order_status in ('1','0') and UNIX_TIMESTAMP(item.acture_start_tm)> UNIX_TIMESTAMP(NOW())
       AND project.project_id = item.project_id
     </where>
-    order by item.create_time desc
+    order by item.order_status,item.create_time desc
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from order_item

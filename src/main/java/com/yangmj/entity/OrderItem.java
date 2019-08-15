@@ -5,6 +5,7 @@ import com.yangmj.entity.base.BaseEntity;
 import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 
 public class OrderItem extends BaseEntity {
     private Integer id;
@@ -36,6 +37,14 @@ public class OrderItem extends BaseEntity {
 
     private String sportTitle;
 
+    public HashMap getSort() {
+        return sort;
+    }
+
+    public void setSort(HashMap sort) {
+        this.sort = sort;
+    }
+
     private BigDecimal projectCost;
 
     private String feeTags;
@@ -49,6 +58,46 @@ public class OrderItem extends BaseEntity {
     private String wechatOpenid;
 
     private boolean joined;
+
+    private HashMap sort;
+
+    private String perCost;
+    private String sportImgUrl;
+    private String sportType;
+    private String firstPageUrl;
+    //新增字段，不映射到数据库
+    @Transient
+    private String numType;
+    @Transient
+    private String costRMB;
+
+    @Transient
+    private String queryDate;
+
+    /**
+     * 查询的总人数上限
+     */
+    @Transient
+    private Integer totalNumUp;
+
+    public String getFirstPageUrl() {
+        return firstPageUrl;
+    }
+
+    public void setFirstPageUrl(String firstPageUrl) {
+        this.firstPageUrl = firstPageUrl;
+    }
+
+    private String startWechatOpenid;
+
+    public String getSportType() {
+        return sportType;
+    }
+
+    public void setSportType(String sportType) {
+        this.sportType = sportType;
+    }
+
 
     public boolean isJoined() {
         return joined;
@@ -73,40 +122,6 @@ public class OrderItem extends BaseEntity {
     public void setPerCost(String perCost) {
         this.perCost = perCost;
     }
-
-    private String perCost;
-
-
-    public String getFirstPageUrl() {
-        return firstPageUrl;
-    }
-
-    public void setFirstPageUrl(String firstPageUrl) {
-        this.firstPageUrl = firstPageUrl;
-    }
-
-    private String startWechatOpenid;
-
-    private String sportImgUrl;
-    private String sportType;
-    private String firstPageUrl;
-
-    public String getSportType() {
-        return sportType;
-    }
-
-    public void setSportType(String sportType) {
-        this.sportType = sportType;
-    }
-
-    //新增字段，不映射到数据库
-    @Transient
-    private String numType;
-    @Transient
-    private String costRMB;
-
-    @Transient
-    private String queryDate;
 
     public String getQueryDate() {
         return queryDate;
@@ -141,11 +156,7 @@ public class OrderItem extends BaseEntity {
     }
 
 
-    /**
-     * 查询的总人数上限
-     */
-    @Transient
-    private Integer totalNumUp;
+
 
     public Integer getTotalNumUp() {
         return totalNumUp;

@@ -21,7 +21,7 @@ public interface OrderItemService {
      * @param
      * @return
      */
-    List<OrderItem> queryLeaderOrFollower(HashMap hashMap);
+    MyPageInfo<OrderItem> queryLeaderOrFollower(HashMap hashMap);
 
     int updateOrderItemByKey(OrderItem record);
 

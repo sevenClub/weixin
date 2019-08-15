@@ -87,8 +87,10 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    public List<OrderItem> queryLeaderOrFollower(HashMap hashMapparam) {
-
+    public MyPageInfo<OrderItem> queryLeaderOrFollower(HashMap hashMapparam) {
+        Integer pageNum = (Integer)hashMapparam.get("pageNum");
+        Integer pageSize = (Integer)hashMapparam.get("pageSize");
+        PageHelper.startPage(pageNum,pageSize);
 
         List<OrderItem> orderItemList = orderItemMapper.queryLeaderOrFollower(hashMapparam);
 
@@ -114,7 +116,8 @@ public class OrderItemServiceImpl implements OrderItemService {
                 }
             }
         }
-        return orderItemList;
+        MyPageInfo<OrderItem> orderItemPageInfo = new MyPageInfo<>(orderItemList);
+        return orderItemPageInfo;
     }
 
     @Override
