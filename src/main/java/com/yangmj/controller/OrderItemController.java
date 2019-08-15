@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -124,9 +125,24 @@ public class OrderItemController {
         }else {
             //查询所有的
         }
-        //根据时间筛选
+        //根据时间筛选 01 今天，02 明天 03 本周 04 本月
         if (!StringUtils.isEmpty(queryDate)) {
-            orderItem.setActureStartTm(queryDate);
+            String today = DateUtil.formatDate();
+            if ("01".equals(queryDate)) {
+                orderItem.setActureStartTm(today);
+            }else if ("02".equals(queryDate)) {
+                String tomorrow = DateUtil.addDays(today, 1);
+                orderItem.setActureStartTm(tomorrow);
+            }else if ("03".equals(queryDate)) {
+                Date endDayOfWeek = DateUtil.getEndDayOfWeek();
+                orderItem.setTmpDate(today);
+                orderItem.setEndTime(endDayOfWeek.toString());
+            }else{
+                String maxMonthDate = DateUtil.getMaxMonthDate();
+                orderItem.setTmpDate(today);
+                orderItem.setEndTime(maxMonthDate);
+            }
+
         }
         MyPageInfo<OrderItem> projectItemPageInfo = orderItemService.queryOrderItemAll(orderItem);
         ResponseResult resp = ResponseResult.makeSuccResponse(null, projectItemPageInfo);

@@ -57,8 +57,14 @@
       <if test="endPrice != null and endPrice != ''"  >
         <![CDATA[ AND  item.end_price <= #{endPrice}]]>
       </if>
-      <if test="actureStartTm != null and actureStartTm != ''"  >
-        AND item.acture_start_tm like #{actureStartTm}"%"
+      <if test="actureStartTm != null and actureStartTm != ''" >
+          AND item.acture_start_tm like #{actureStartTm}"%"
+      </if>
+      <if test="tmpDate != null and tmpDate != ''">
+        <![CDATA[ AND item.acture_start_tm >= #{tmpDate}]]>
+      </if>
+      <if test="endTime != null and endTime != ''"  >
+          <![CDATA[ AND  item.end_time <= #{endTime}]]>
       </if>
       AND item.order_status in ('1','0') and UNIX_TIMESTAMP(item.acture_start_tm)> UNIX_TIMESTAMP(NOW())
       AND project.project_id = item.project_id

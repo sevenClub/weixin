@@ -65,14 +65,24 @@ public class OrderItem extends BaseEntity {
     private String sportImgUrl;
     private String sportType;
     private String firstPageUrl;
+
+    private String tmpDate;
     //新增字段，不映射到数据库
     @Transient
     private String numType;
     @Transient
     private String costRMB;
 
-    @Transient
+//    @Transient
     private String queryDate;
+
+    public String getTmpDate() {
+        return tmpDate;
+    }
+
+    public void setTmpDate(String tmpDate) {
+        this.tmpDate = tmpDate;
+    }
 
     /**
      * 查询的总人数上限
