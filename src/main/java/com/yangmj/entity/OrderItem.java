@@ -36,6 +36,10 @@ public class OrderItem extends BaseEntity {
     private String endTime;
 
     private String sportTitle;
+    @Transient
+    private String formId;
+    @Transient
+    private String accessToken;
 
     public HashMap getSort() {
         return sort;
@@ -89,7 +93,21 @@ public class OrderItem extends BaseEntity {
      */
     @Transient
     private Integer totalNumUp;
+    public String getAccessToken() {
+        return accessToken;
+    }
 
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getFormId() {
+        return formId;
+    }
+
+    public void setFormId(String formId) {
+        this.formId = formId;
+    }
     public String getFirstPageUrl() {
         return firstPageUrl;
     }

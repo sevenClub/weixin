@@ -5,6 +5,7 @@ import com.yangmj.common.ResponseResult;
 import com.yangmj.common.SystemDefault;
 import com.yangmj.entity.OrderDetails;
 import com.yangmj.entity.OrderItem;
+import com.yangmj.service.MessagePushService;
 import com.yangmj.service.OrderDetailsService;
 import com.yangmj.service.OrderItemService;
 import com.yangmj.util.CommonUtils;
@@ -27,6 +28,9 @@ public class OrderDetailsController {
 
     @Autowired
     private OrderItemService orderItemService;
+
+    @Autowired
+    private MessagePushService messagePushService;
 
     /**
      *
@@ -71,7 +75,14 @@ public class OrderDetailsController {
         if (isPartIn >= 1) {
             return ResponseResult.makeFailResponse(SystemDefault.NOTICE_FRIENDLY,null );
         }
+    /*    //将项目开始时间和结束时间拼接
+        String time = orderItem.getActureStartTm()+ orderItem.getEndTime();
+        //当前系统时间格式化
+        String dateTime = DateUtil.formatDateTime();
+        //添加模板data内容
+        String[] value = {orderItem.getSportTitle(),time,orderItem.getGameLocation(),orderItem.getTotalNum().toString(),dateTime};
 
+      //  messagePushService.pushOneUser();*/
         OrderDetails orderDetails = new OrderDetails();
         orderDetails.setOrderId(orderItemId);
         orderDetails.setWechatOpenid(wechatOpenid);

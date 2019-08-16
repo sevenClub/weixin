@@ -6,6 +6,7 @@ import com.yangmj.common.ResponseResult;
 import com.yangmj.common.SystemDefault;
 import com.yangmj.entity.OrderDetails;
 import com.yangmj.entity.OrderItem;
+import com.yangmj.service.MessagePushService;
 import com.yangmj.service.OrderDetailsService;
 import com.yangmj.service.OrderItemService;
 import com.yangmj.service.ProjectItemService;
@@ -46,6 +47,8 @@ public class OrderItemController {
     private OrderDetailsService orderDetailsService;
     @Autowired
     private ProjectItemService projectItemService;
+    @Autowired
+    private MessagePushService messagePushService;
 
     //详情页面的图片的信息
     @Value("${login.url}")
