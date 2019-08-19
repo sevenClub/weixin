@@ -6,10 +6,7 @@ import com.yangmj.common.ResponseResult;
 import com.yangmj.common.SystemDefault;
 import com.yangmj.entity.OrderDetails;
 import com.yangmj.entity.OrderItem;
-import com.yangmj.service.MessagePushService;
-import com.yangmj.service.OrderDetailsService;
-import com.yangmj.service.OrderItemService;
-import com.yangmj.service.ProjectItemService;
+import com.yangmj.service.*;
 import com.yangmj.util.CommonUtils;
 import com.yangmj.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -49,10 +46,15 @@ public class OrderItemController {
     private ProjectItemService projectItemService;
     @Autowired
     private MessagePushService messagePushService;
+    @Autowired
+    private WechatService wechatService;
 
     //详情页面的图片的信息
     @Value("${login.url}")
     private  String loginUrl;
+
+    @Value("${wechat.templateId.startOrder}")
+    private String templateIdStartOrder;
 
 
     /**
@@ -212,6 +214,8 @@ public class OrderItemController {
     @PostMapping("/createOrderItem")
     @Transactional
     public ResponseResult createProjectItem(@RequestBody OrderItem orderItem) {
+        String openid = orderItem.getStartWechatOpenid();
+        String formId = orderItem.getFormId();
         ResponseResult resp = null;
         //验证手机号是否输入或输入是否合法
         String phone = orderItem.getContactDir();
@@ -266,6 +270,12 @@ public class OrderItemController {
             orderDetails.setContactDir(phone);
             String details = orderDetailsService.insertOrderDetails(orderDetails);
             resp = ResponseResult.makeSuccResponse(null, item);
+
+            //消息推送
+            String access_token = wechatService.loginWechatNotice();
+            String time = orderItem.getActureStartTm()+"~"+ orderItem.getEndTime();
+            String[] value = {orderItem.getSportTitle(),time,orderItem.getGameLocation(),"5ren","xxx"};
+            messagePushService.pushOneUser(access_token,openid,formId,templateIdStartOrder,value);
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.toString());

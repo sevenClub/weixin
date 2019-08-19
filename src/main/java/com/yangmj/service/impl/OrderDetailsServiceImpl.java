@@ -7,8 +7,11 @@ import com.yangmj.entity.OrderDetails;
 import com.yangmj.entity.OrderItem;
 import com.yangmj.mapper.OrderDetailsMapper;
 import com.yangmj.mapper.OrderItemMapper;
+import com.yangmj.service.MessagePushService;
 import com.yangmj.service.OrderDetailsService;
+import com.yangmj.service.WechatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -26,6 +29,14 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
 
     @Autowired
     private OrderItemMapper orderItemMapper;
+
+    @Autowired
+    private WechatService wechatService;
+    @Autowired
+    private MessagePushService messagePushService;
+
+    @Value("${wechat.templateId.full}")
+    private String templateIdPartFull;
     @Override
     public MyPageInfo<OrderDetails> queryOrderDetailsAll(OrderDetails orderDetails) {
         PageHelper.startPage(orderDetails.getPageNum(),orderDetails.getPageSize());
@@ -67,9 +78,12 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
                         queryItem.setOrderStatus("1");
                         //                0可以开始游戏，1还在招募人员
                         queryItem.setGameStatus("0");
+                        String time = queryItem.getActureStartTm()+"~"+ queryItem.getEndTime();
+                        String[] value = {queryItem.getSportTitle(),time,queryItem.getGameLocation(),queryItem.getTotalNum().toString(),"xxx"};
                         orderItemMapper.updateOrderItemByKey(queryItem);
                         //TODO 最后一个人拼团成功后，返回服务通知消息，该项目的信息
-//                        result ="notice_ok";
+                        String access_token = wechatService.loginWechatNotice();
+                        messagePushService.pushOneUser(access_token,queryItem.getStartWechatOpenid(),orderDetails.getFormId(),templateIdPartFull,value);
                     }
 
                 }

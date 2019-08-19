@@ -1,15 +1,25 @@
 package com.yangmj.util;
 
+import com.yangmj.config.WechatAuthProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+@Component
 public class CommonUtils {
 
     @Value("${login.pageUrl}")
     private  String loginPageUrl;
+
+
+    @Autowired
+    WechatAuthProperties wechatAuthProperties;
+
+    private RestTemplate wxAuthRestTemplate = new RestTemplate();
 
     public static String checkPhone(String phone) {
         String resp = "00";
@@ -39,19 +49,6 @@ public class CommonUtils {
         b = m.matches();
         return b;
     }
-
-//    public OrderItem imagesUrl(OrderItem orderItemquery) {
-//        for (int j = 1; j <=9 ; j++) {
-//            if ((j + "").equals(orderItemquery.getProjectId())) {
-//                orderItemquery.setSportImgUrl(loginPageUrl + j + ".jpg");
-//                break;
-//            } else {
-//                orderItemquery.setSportImgUrl(loginPageUrl +"other.jpg");
-//                break;
-//            }
-//        }
-//        return orderItemquery;
-//    }
 
 
 

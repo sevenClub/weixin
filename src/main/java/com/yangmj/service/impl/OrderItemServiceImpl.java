@@ -110,7 +110,7 @@ public class OrderItemServiceImpl implements OrderItemService {
                 //页面返回字段
                 String feeTags = orderItemquery.getFeeTags();
                 if ("AA".equals(feeTags)) {
-                    orderItemquery.setPerCost(SystemDefault.AMOUNT_SYMBOL+orderItemquery.getEndPrice());
+                    orderItemquery.setPerCost(SystemDefault.PAY_AA);
                 } else {
                     orderItemquery.setPerCost(SystemDefault.PAY_OO);
                 }

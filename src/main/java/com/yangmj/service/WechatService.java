@@ -1,5 +1,6 @@
 package com.yangmj.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.yangmj.config.WechatAuthProperties;
@@ -12,6 +13,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -26,6 +28,12 @@ public class WechatService {
 
     @Autowired
     private ConsumerMapper consumerMapper;
+
+    @Value("${auth.wechat.appId}")
+    private String appId;
+
+    @Value("${auth.wechat.secret}")
+    private String secret;
 
     /**
      * 服务器第三方session有效时间，单位秒, 默认1天
@@ -129,6 +137,16 @@ public class WechatService {
             return "01";
         }
         return result;
+    }
+
+    public String loginWechatNotice() {
+        String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+ this.appId +"&secret="+ this.secret +"";
+        System.out.println("url=====+微信消息通知"+url);
+        String response = wxAuthRestTemplate
+                .getForObject(url,String.class);
+        JSONObject object = (JSONObject) JSONObject.parse(response);
+        String access_token = (String)object.get("access_token");
+        return access_token;
     }
 
 }

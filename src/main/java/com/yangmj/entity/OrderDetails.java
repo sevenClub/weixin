@@ -24,6 +24,16 @@ public class OrderDetails extends BaseEntity {
 
     private String isCaptain;
 
+    public String getFormId() {
+        return formId;
+    }
+
+    public void setFormId(String formId) {
+        this.formId = formId;
+    }
+
+    private String formId;
+
     public Integer getId() {
         return id;
     }

@@ -38,11 +38,11 @@ public class ThirdSessionAuthFilter extends OncePerRequestFilter {
         //如果请求路径为微信通知后台支付结果则不需要token（之后会在具体的controller中，对双方签名进行验证防钓鱼）
         String url = request.getRequestURI().substring(request.getContextPath().length());
 
-        /*if (url.equals("/auth") || url.equals("/test")) {
+      /*  if (url.equals("/auth") || url.equals("/test")) {
             chain.doFilter(request, response);
             return;
-        }
-        //解决图片的访问资源
+        }*/
+       /* //解决图片的访问资源
         if (url.startsWith("/images")) {
             chain.doFilter(request, response);
             return;

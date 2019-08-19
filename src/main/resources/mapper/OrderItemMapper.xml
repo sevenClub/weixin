@@ -339,7 +339,7 @@
 
   <select id="queryLeaderOrFollower" parameterType="java.util.Map" resultMap="BaseResultMap">
     select item.id,item.sport_title,item.curr_Num,item.total_Num,item.acture_start_tm,item.end_time,
-        item.game_location,project.first_page_url sport_img_url,item.end_price endPrice ,item.fee_tags feeTags
+        item.game_location,project.first_page_url sport_img_url,item.end_price ,item.fee_tags
     from order_item item,order_details detail,project_item project
     <where>
       and item.id = detail.order_id
