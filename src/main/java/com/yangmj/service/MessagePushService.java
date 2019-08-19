@@ -1,7 +1,6 @@
 package com.yangmj.service;
 
 
-import com.alibaba.fastjson.JSONObject;
 import com.yangmj.entity.TemplateData;
 import com.yangmj.entity.WxMssVo;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +52,7 @@ public class MessagePushService {
         wxMssVo.setTouser(openid);//用户openid
         wxMssVo.setForm_id(formId);//formId
         wxMssVo.setTemplate_id(templateId);//模版id
+        wxMssVo.setPage("pages/index/index");
         Map<String, TemplateData> m = new HashMap<>();
 
         //封装数据
@@ -82,7 +82,7 @@ public class MessagePushService {
      * 获取access_token
      * appid和appsecret到小程序后台获取，当然也可以让小程序开发人员给你传过来
      * */
-    public String getAccess_token() {
+    /*public String getAccess_token() {
         //获取access_token
         String appid = "wxb1abfc1724c5ee8b";
         String appsecret = "c88a5dd3c3af8228a389d778fce3e32b";
@@ -104,7 +104,7 @@ public class MessagePushService {
         weChatUtil.pushOneUser(weChatUtil.getAccess_token()
                 ,"o_fh25E0IufW7NIpezUReODfVH68","ec76b8b81cd04cf6b464bb0adf309d3b","zv0IsYDpJxgKWLHGUy8FEv0ajtJqkfhWTsFWiM7zzSU"
                 ,values);
-    }
+    }*/
 
 }
 

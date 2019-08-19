@@ -13,7 +13,6 @@ import com.yangmj.util.CommonUtils;
 import com.yangmj.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.StringUtils;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
@@ -37,19 +35,8 @@ public class OrderDetailsController {
     @Autowired
     private MessagePushService messagePushService;
 
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
-
-    private RestTemplate wxAuthRestTemplate = new RestTemplate();
-
     @Value("${wechat.templateId.partin}")
     private String templateIdPartIn;
-
-//    @Value("${auth.wechat.appId}")
-////    private String appId;
-////
-////    @Value("${auth.wechat.secret}")
-////    private String secret;
 
     @Autowired
     private WechatService wechatService;
@@ -76,16 +63,8 @@ public class OrderDetailsController {
     @PostMapping("/takePartInSportDetails")
     @Transactional
     public ResponseResult insertDetails(@RequestBody OrderItem orderItem) {
-//        String wxSessionObj = stringRedisTemplate.opsForValue().get(orderItem.getAccessToken());
-//        String[] strings = wxSessionObj.split("#");
         String openid = orderItem.getStartWechatOpenid();
         String formId = orderItem.getFormId();
-
-       /* String response = wxAuthRestTemplate
-                .getForObject("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wxcc04c98ba3b06d62&secret=dd1281f54b2dcb84008b4a586739a8d3",
-                        String.class);
-        JSONObject object = (JSONObject) JSONObject.parse(response);
-        String access_token = (String)object.get("access_token");*/
 
         ResponseResult resp = null;
         String wechatOpenid = orderItem.getStartWechatOpenid();
@@ -128,12 +107,16 @@ public class OrderDetailsController {
 //            00 为插入数据库成功
             if("00".equals(details)){
                 resp = ResponseResult.makeSuccResponse(null, details);
+                //消息通知
                 //将项目开始时间和结束时间拼接
-                String time = orderItem.getActureStartTm()+"~"+ orderItem.getEndTime();
+                OrderItem order = new OrderItem();
+                order.setId(orderItemId);
+                OrderItem orderItem1 = orderItemService.queryOrderItemByKey(order);
+                String time = orderItem1.getActureStartTm()+"~"+ orderItem1.getEndTime();
                 //当前系统时间格式化
                 String dateTime = DateUtil.formatDateTime();
                 //添加模板data内容
-                String[] value = {orderItem.getSportTitle(),dateTime,time,orderItem.getGameLocation(),"",""};
+                String[] value = {orderItem1.getSportTitle(),dateTime,time,orderItem1.getGameLocation(),"",""};
                 System.out.println("accessToken"+access_token);
                 System.out.println("openid"+openid);
                 System.out.println("formId"+formId);
@@ -145,7 +128,6 @@ public class OrderDetailsController {
 //                参数不完整，如参数传递错误
                 resp = ResponseResult.makeFailResponse(details,null );
             }
-            //TODO 人数达标返回消息，如消息模板id，和数据的信息相关
         } catch (Exception e) {
             e.printStackTrace();
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

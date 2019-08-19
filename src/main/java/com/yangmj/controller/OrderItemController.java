@@ -274,7 +274,7 @@ public class OrderItemController {
             //消息推送
             String access_token = wechatService.loginWechatNotice();
             String time = orderItem.getActureStartTm()+"~"+ orderItem.getEndTime();
-            String[] value = {orderItem.getSportTitle(),time,orderItem.getGameLocation(),"5ren","xxx"};
+            String[] value = {orderItem.getSportTitle(),time,orderItem.getGameLocation(),orderItem.getTotalNum().toString(),DateUtil.formatDateTime()};
             messagePushService.pushOneUser(access_token,openid,formId,templateIdStartOrder,value);
         } catch (Exception e) {
             e.printStackTrace();

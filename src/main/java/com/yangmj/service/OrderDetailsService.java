@@ -3,6 +3,7 @@ package com.yangmj.service;
 import com.yangmj.common.MyPageInfo;
 import com.yangmj.entity.OrderDetails;
 
+import java.util.List;
 import java.util.Map;
 
 public interface OrderDetailsService {
@@ -21,5 +22,6 @@ public interface OrderDetailsService {
     Map<String, Object> viewDetailsOneOrder(Integer id);
 
 
+    List<Map> queryOpenidByOrderId(Integer id);
 
 }

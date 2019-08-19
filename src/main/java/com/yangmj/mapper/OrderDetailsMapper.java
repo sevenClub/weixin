@@ -60,4 +60,13 @@ public interface OrderDetailsMapper {
     @Select("SELECT detail.order_id orderId,detail.wechat_openid openid from order_item item ,order_details detail where item.id = detail.order_id and item.order_status in ('1','0') and UNIX_TIMESTAMP(item.acture_start_tm)> UNIX_TIMESTAMP(NOW()) order by item.id desc")
     List<HashMap> queryJoinedOpenid();
 
+
+    /**
+     * 通过id查询该订单的人数
+     * @param id
+     * @return
+     */
+    @Select("SELECT  detail.wechat_openid openId from order_item item ,order_details detail where item.id = detail.order_id and item.id =#{id}")
+    List<Map> queryOpenidByOrderId(@Param("id") Integer id);
+
 }
