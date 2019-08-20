@@ -81,23 +81,7 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
                         String time = queryItem.getActureStartTm()+"~"+ queryItem.getEndTime();
                         String[] value = {queryItem.getSportTitle(),time,queryItem.getGameLocation(),queryItem.getTotalNum().toString(),"xxx",""};
                         orderItemMapper.updateOrderItemByKey(queryItem);
-                        //TODO 最后一个人拼团成功后，返回服务通知消息，该项目的信息
-                        //通过订单id获取该订单的的details的所有的参加人的信息
-//                        List<Map> maps = orderDetailsMapper.queryOpenidByOrderId(queryItem.getId());
-//                        if (maps.size() > 0) {
-//                            for (int i = 0; i < maps.size(); i++) {
-//                                Map hashMap = maps.get(i);
-//                                String openId = (String)hashMap.get("openId");
-//                                String access_token = wechatService.loginWechatNotice();
-//                                System.out.println("循环templateIdPartFull+++***"+templateIdPartFull);
-//                                messagePushService.pushOneUser(access_token,openId,orderDetails.getFormId(),templateIdPartFull,value);
-//                            }
-//                        }
-//                        //当前最后一个人的id
-//                        String access_token1 = wechatService.loginWechatNotice();
-//                        System.out.println("当前最后一个人的id***templateIdPartFull+++***"+templateIdPartFull);
-//                        messagePushService.pushOneUser(access_token1,orderDetails.getWechatOpenid(),orderDetails.getFormId(),templateIdPartFull,value);
-
+                        //最后一个人拼团成功后，返回服务通知消息，该项目的信息
                     }
 
                 }

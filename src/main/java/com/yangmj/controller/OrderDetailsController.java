@@ -11,6 +11,7 @@ import com.yangmj.service.OrderItemService;
 import com.yangmj.service.WechatService;
 import com.yangmj.util.CommonUtils;
 import com.yangmj.util.DateUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
+@Slf4j
 public class OrderDetailsController {
 
     @Autowired
@@ -117,11 +119,11 @@ public class OrderDetailsController {
                 String dateTime = DateUtil.formatDateTime();
                 //添加模板data内容
                 String[] value = {orderItem1.getSportTitle(),dateTime,time,orderItem1.getGameLocation()};
-                System.out.println("accessToken&&&&"+access_token);
-                System.out.println("openid&&&&"+openid);
-                System.out.println("formId&&&&"+formId);
-                System.out.println("templateId&&&"+templateIdPartIn);
-                System.out.println("拼单进入订单的**"+orderItem.getId());
+                log.info("insertDetails类accessToken&&&&"+access_token);
+                log.info("insertDetails类openid&&&&"+openid);
+                log.info("insertDetails类formId&&&&"+formId);
+                log.info("insertDetails类templateId&&&"+templateIdPartIn);
+                log.info("insertDetails类拼单进入订单的**"+orderItem.getId());
                 messagePushService.pushOneUser(access_token,openid,formId,templateIdPartIn,value,orderItem.getId());
             }else if("01".equals(details)){
                 resp = ResponseResult.makeFailResponse(SystemDefault.PART_IN_NUM_FULL,null );
@@ -131,6 +133,7 @@ public class OrderDetailsController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.toString());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             resp = ResponseResult.makeFailResponse(SystemDefault.NETWORK_ERROR, "");
         }
@@ -147,19 +150,9 @@ public class OrderDetailsController {
     public ResponseResult viewDetailsOneOrder(@RequestBody OrderItem orderItem) {
         ResponseResult resp = null;
         Map<String, Object> stringObjectMap = orderDetailsService.viewDetailsOneOrder(orderItem.getId());
-        System.out.println(orderItem.toString());
+        log.info(orderItem.toString());
 
         resp = ResponseResult.makeSuccResponse(null, stringObjectMap);
         return resp;
     }
-
-   /* public String loginWechatNotice() {
-        String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+ this.appId +"&secret="+ this.secret +"";
-        System.out.println("url=====+微信消息通知"+url);
-        String response = wxAuthRestTemplate
-                .getForObject(url,String.class);
-        JSONObject object = (JSONObject) JSONObject.parse(response);
-        String access_token = (String)object.get("access_token");
-        return access_token;
-    }*/
 }

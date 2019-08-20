@@ -41,8 +41,6 @@ public class OrderItemServiceImpl implements OrderItemService {
         HashMap<Object, Object> hashMap = CommonQuery.setCurrentNum(listNumCount);
         if(!CollectionUtils.isEmpty(orderItemList)){
             //订单信息不是空的时候，获取该订单的url,订单的地址
-//            ProjectItem projectItem = new ProjectItem();
-//            List<Map> mapUrls = projectItemMapper.queryAllProjectUrl();
             for (int i = 0; i < orderItemList.size(); i++) {
                 OrderItem orderItemquery = orderItemList.get(i);
 

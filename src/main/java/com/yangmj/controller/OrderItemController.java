@@ -296,9 +296,7 @@ public class OrderItemController {
     @PostMapping("/tmpStartGame")
     public ResponseResult tmpStartGame(@RequestBody OrderItem orderItem) {
 //        安全需要自己从表或者然后更新
-//        MyPageInfo<OrderItem> queryOrderItemAll = orderItemService.queryOrderItemAll(orderItem);
         OrderItem orderItemBean = orderItemService.queryOrderItemByKey(orderItem);
-//        OrderItem orderItemBean = queryOrderItemAll.getList().get(0);
 //        0满员 1 未满员
         orderItemBean.setIsFull("0");
 //        0 组队中 1 待参加 2： 正常结束 3：时间到组队失败 4：发起者人为取消订单）
@@ -330,7 +328,6 @@ public class OrderItemController {
         //        0 组队中 1 待参加 2： 正常结束 3：时间到组队失败 4：发起者人为取消订单）
         orderItem.setOrderStatus("4");
         orderItem.setUpdateTime(DateUtil.formatDateTime());
-
         ResponseResult resp = null;
         try {
             int item = orderItemService.updateOrderItemByKeySelective(orderItem);
@@ -350,7 +347,7 @@ public class OrderItemController {
      */
     //@PostMapping("/timerCloseOrder") //页面测试
     //定时任务时间的
-    @Scheduled(cron = "*/30 * * * * ?")
+    @Scheduled(cron = "*/15 * * * * ?")
     public void timerCloseOrderNoFull() {
         List<OrderItem> orderItemList = orderItemService.timerCloseOrder();
         HashMap<Object, Object> hashMap = new HashMap<>();
@@ -370,7 +367,7 @@ public class OrderItemController {
      * 订单时间到了最后的时间，该订单进行关闭
      */
 //    @PostMapping("/timerCloseOrderNormalEnd")
-    @Scheduled(cron = "*/30 * * * * ?")
+    @Scheduled(cron = "*/15 * * * * ?")
     public void timerCloseOrderNormalEnd() {
         List<OrderItem> orderItemList = orderItemService.timerCloseOrderNormalEnd();
         HashMap<Object, Object> hashMap = new HashMap<>();

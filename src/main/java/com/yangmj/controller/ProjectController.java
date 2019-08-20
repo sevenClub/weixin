@@ -23,9 +23,6 @@ public class ProjectController {
      */
     @PostMapping("/findAllProject")
     public ResponseResult queryProjectItem(@RequestBody ProjectItem projectItem){
-//    public ProjectItem queryProjectItem(@RequestBody JSONObject jsonObject){
-//        String a=jsonObject.get("id").toString();
-//        Integer id=Integer.parseInt(a);
         MyPageInfo<ProjectItem> projectItemPageInfo = projectItemService.queryProjectItemList(projectItem);
         ResponseResult resp = ResponseResult.makeSuccResponse(null, projectItemPageInfo);
         return resp;
