@@ -79,7 +79,7 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
                         //                0可以开始游戏，1还在招募人员
                         queryItem.setGameStatus("0");
                         String time = queryItem.getActureStartTm()+"~"+ queryItem.getEndTime();
-                        String[] value = {queryItem.getSportTitle(),time,queryItem.getGameLocation(),queryItem.getTotalNum().toString(),"xxx","wode"};
+                        String[] value = {queryItem.getSportTitle(),time,queryItem.getGameLocation(),queryItem.getTotalNum().toString(),"xxx",""};
                         orderItemMapper.updateOrderItemByKey(queryItem);
                         //TODO 最后一个人拼团成功后，返回服务通知消息，该项目的信息
                         //通过订单id获取该订单的的details的所有的参加人的信息

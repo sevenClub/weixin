@@ -275,7 +275,8 @@ public class OrderItemController {
             String access_token = wechatService.loginWechatNotice();
             String time = orderItem.getActureStartTm()+"~"+ orderItem.getEndTime();
             String[] value = {orderItem.getSportTitle(),time,orderItem.getGameLocation(),orderItem.getTotalNum().toString(),DateUtil.formatDateTime()};
-            messagePushService.pushOneUser(access_token,openid,formId,templateIdStartOrder,value);
+            System.out.println("创建订单推送消息的主键id**"+orderItem.getId());
+            messagePushService.pushOneUser(access_token,openid,formId,templateIdStartOrder,value,orderItem.getId());
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.toString());

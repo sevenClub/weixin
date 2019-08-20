@@ -116,12 +116,13 @@ public class OrderDetailsController {
                 //当前系统时间格式化
                 String dateTime = DateUtil.formatDateTime();
                 //添加模板data内容
-                String[] value = {orderItem1.getSportTitle(),dateTime,time,orderItem1.getGameLocation(),"",""};
-                System.out.println("accessToken"+access_token);
-                System.out.println("openid"+openid);
-                System.out.println("formId"+formId);
-                System.out.println("templateId"+templateIdPartIn);
-                messagePushService.pushOneUser(access_token,openid,formId,templateIdPartIn,value);
+                String[] value = {orderItem1.getSportTitle(),dateTime,time,orderItem1.getGameLocation()};
+                System.out.println("accessToken&&&&"+access_token);
+                System.out.println("openid&&&&"+openid);
+                System.out.println("formId&&&&"+formId);
+                System.out.println("templateId&&&"+templateIdPartIn);
+                System.out.println("拼单进入订单的**"+orderItem.getId());
+                messagePushService.pushOneUser(access_token,openid,formId,templateIdPartIn,value,orderItem.getId());
             }else if("01".equals(details)){
                 resp = ResponseResult.makeFailResponse(SystemDefault.PART_IN_NUM_FULL,null );
             }else {

@@ -37,7 +37,7 @@ public class MessagePushService {
      * @param keywords {与模板字段一一对应}
      * @return
      */
-    public String pushOneUser(String accessToken,String openid, String formId,String templateId,String[] keywords) {
+    public String pushOneUser(String accessToken,String openid, String formId,String templateId,String[] keywords,Integer id) {
 
    /*     //如果access_token为空则从新获取
         if(StringUtils.isEmpty(accessToken)){
@@ -52,7 +52,7 @@ public class MessagePushService {
         wxMssVo.setTouser(openid);//用户openid
         wxMssVo.setForm_id(formId);//formId
         wxMssVo.setTemplate_id(templateId);//模版id
-        wxMssVo.setPage("pages/index/index");
+        wxMssVo.setPage("pages/detail/index?key="+id);
         Map<String, TemplateData> m = new HashMap<>();
 
         //封装数据
